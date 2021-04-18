@@ -1,0 +1,82 @@
+\documentclass[11pt,a4paper]{article}
+
+% some more symbols
+\usepackage{textcomp}
+\usepackage[utf8]{inputenc}
+
+\usepackage{natbib,multicol}
+\bibpunct[, ]{(}{)}{;}{a}{}{,}
+
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{1ex}
+\addtolength{\oddsidemargin}{-7ex}
+\addtolength{\evensidemargin}{-7ex}
+\addtolength{\textwidth}{14ex}
+\addtolength{\topmargin}{-2\baselineskip}
+\addtolength{\textheight}{4\baselineskip}
+
+\usepackage[breaklinks,colorlinks,filecolor=blue,linkcolor=blue,urlcolor=blue,citecolor=red]{hyperref}
+\usepackage{url}
+
+\begin{document}
+
+\begin{center}
+  \textbf{Experimental Course Proposal \\ Iowa State University\\[3ex]
+  {\large ENGL XXX \\ Language Processing and its Applications\\ (working title)}\\[3ex]
+}
+\end{center}
+
+\bigskip
+%\newpage
+\textbf{\large Written by:}
+  Sowmya Vajjala on \today
+  \begin{itemize}\vspace*{-.4\baselineskip}\itemsep-.4ex
+    \item \textit{Email:} sowmya@iastate.edu
+  \item \textit{Office:} 331 Ross Hall
+\end{itemize}
+
+\textbf{\large Reason for Proposal} \\
+
+Data of any form (text, numbers, images etc.) is available in large amounts now like never before. This resulted in a wave of new technologies and jobs that fall under the umbrella of "data science" and "big data". Text is one of the major forms of big data, and finding patterns from large text corpora is one of the major applications of big data analytics. This makes the knowledge about analyzing texts a valuable skill for the IT industry. This experimental course is being proposed in this background.
+
+\textbf{\large Course Description:}
+This course aims to introduce undergraduate students to methods of text processing and its real-life applications. The focus in this course in on practical applications of existing text processing tools rather than the development of new tools. Thus, in this course, we utilize existing tools that analyze various aspects of language, to solve real-world text processing problems.
+
+\textbf{\large Pre-requisites:}
+Knowledge in atleast one programming language is necessary.  
+
+\bigskip
+
+\bigskip \textbf{Nature of the course and expectations:} Primary mode of instruction is by lectures and handson lab sessions. The course will have regular programming assignments that deal with real-world text datasets and a final project where the students will work with a text processing application that is not discussed in the syllabus but is a problem with a solution.
+
+\bigskip\textbf{\large Learning Outcomes}
+After finishing this course, students are expected to be comfortable with applying computational linguistic tools for creating solutions to real world text processing problems.
+
+\bigskip\textbf{\large Textbooks and Other Resources}
+Primary textbook: Jurafsky and Martin. Secondary resources: Online videos, free and open-source and datasets. Need to add the specifics.
+
+\bigskip\textbf{\large Syllabus - topics covered}
+\begin{enumerate}
+\item Crash course in linguistics
+\begin{itemize}
+\item Introduction to basic ideas from linguistics that are useful in programming for language processing.
+\item planned duration: 2 weeks 
+\end{itemize}
+\item Processing of text
+\begin{itemize}
+\item Tokenizing, basics of language models, parts of speech tagging 
+\item parsing, text classification, information retrieval
+\item planned duration: 4 weeks
+\end{itemize}
+\item Predictive modeling of text and real life applications:
+\begin{itemize}
+\item Machine Translation
+\item Sentiment analysis
+\item Topic modeling 
+\item Text summarization
+\end{itemize}
+\\ duration: 6 weeks
+\item Visualization tools for text data 
+\\ duration: 2 weeks
+\end{enumerate}
+\end{document}

@@ -1,0 +1,17 @@
+setwd("~/Dropbox/ClassroomSlides-BothCourses/LING410X/Week3Materials/code")
+temp1 <- scan("WordFreqPlotBasics-BetterOne.pdf", what = "character", sep = "\n")
+write(temp1,"temp1.txt")
+library(pdftools)
+temp2 <- pdf_text("WordFreqPlotBasics-BetterOne.pdf")
+write(temp2,"temp2.txt")
+temp3 <- pdf_text(""2columnpdf.pdf)
+write(temp3,"temp3.txt")
+library(qdaptools)
+temp4 <- read_docx("TrialArticle.docx")
+write(temp4,"temp4.txt")
+
+library(XML)
+url <- "http://radar.oreilly.com/2011/09/building-data-science-teams.html"
+doc <- htmlParse(url, useInternal = TRUE)
+links <-xpathSApply(doc, "//a/@href")
+

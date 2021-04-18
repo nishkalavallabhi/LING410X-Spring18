@@ -1,0 +1,31 @@
+vector1 <- c(1,2,3,4)
+vector2 <- c("English", "German", "French", "Italian", "Chinese")
+vector3 <- c(TRUE, FALSE, FALSE, TRUE)
+
+list1 <- list(1,"a",TRUE,4)
+(This list has two numbers, one string and a boolean value)
+list2 <- list(1,"a",c(1,2,3),4)
+list3 <- list(1,"a",list(1,2,3),4)
+
+list4 <- list(first="Sowmya", course=410, office=331, address="Ross")
+vector4 <- c(first="Sowmya", course=410, office=331, address="Ross")
+names(list4)
+names(vector4)
+list4[1]
+list4[[1]]
+
+
+library(rtimes)
+Sys.setenv(NYTIMES_AS_KEY = "c67c9de54f894135ac568dda4f7679ee") 
+res1 <- as_search(q="artificial intelligence", begin_date = "20081001", end_date = "20081201")
+res2 <- as_search(q="artificial intelligence", begin_date = "20180101", end_date = "20180120")
+res3 <- as_search(q = "money", fq = 'news_desk:("Sports" "Foreign")') #search within categories
+res4 <- as_search("iowa caucus")
+
+snippets_2008 <-  res1$data$snippet
+for (snippet in snippets_2008) {
+   print(tolower(snippet))
+}
+
+df <- data.frame(res1$data$snippet,res1$data$pub_date)
+write.csv(df,"temp.csv")

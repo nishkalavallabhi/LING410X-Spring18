@@ -1,0 +1,345 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\author[Sowmya Vajjala]{Instructor: Sowmya Vajjala}
+
+\title[LING 410X]{LING 410X: Language as Data}
+\subtitle{Semester: Spring '18}
+
+\date{13 February 2018}
+
+\institute{Iowa State University, USA}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\begin{frame}\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Class Outline}
+\begin{itemize}
+\item Recap of last week and how to continue on those topics
+\item Searching for words and their context in text. 
+\item Getting ngrams from text
+\item Assignment 3 description
+\end{itemize}
+Note: Assignment 2 discussion on Thursday, not Today.
+\end{frame}
+
+\begin{frame}
+\Large Recap
+\end{frame}
+
+\begin{frame}
+\frametitle{Recap of last week}
+\begin{itemize}
+\item Text analysis concepts:
+\begin{itemize}
+\item Lexical variety: mean word frequency, type-token ratio, hapax richness (percentage of words that appear only once)
+\end{itemize} \pause
+\item R concepts:
+\begin{enumerate}
+\item Data structures in R: vectors, lists, matrices, arrays, dataframes, factors \pause
+\item Usage of built-in R functions such as: lapply, unname, sum, mean, scale \pause
+\item Writing our own R functions \pause
+\end{enumerate}
+\item Reporting analysis process and results using R Markdown
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{How to work further on these}
+\begin{itemize}
+\item I covered Chapters 6 and 7 from the text book during last week. Go through those chapters, do the exercises at the end of the chapter.
+\item Revisit the slides, and understand the lines of R code shown in class. 
+\item Try to do it yourself, taking some other text file or 
+\item converting the programs to work on a collection of files instead of one file (How??) 
+\item Do the lab exercises whenever you find time, if you did not finish them in lab.
+\item Think in terms of functions you can create and reuse for the rest of the class.
+\item Ask questions, use discussion forums and office hours.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\Large Key Words In Context (KWIC) \\
+\footnotesize (based on Chapters 8 and 9 in the textbook)
+\end{frame}
+
+\begin{frame}
+\frametitle{What is KWIC?}
+\begin{itemize}
+\item KWIC is a way of searching through a text where we do not end our question at: "Where is word X appearing?" but ask for more: "What is the context in which X is appearing?" 
+\item What does context mean? \pause
+\item "Context" just refers to the words surrounding X. e.g., two words before and three words after X. 
+\item The analysis methods we looked at so far saw words as individual entities without bothering about their context.  
+\item This week, we will study how to extract this context information in R.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Before we move on ... }
+\framesubtitle{What is this function doing?}
+\footnotesize
+\begin{verbatim}
+processfile <- function(file_name)
+{
+  text <- scan(file_name, what = "character", sep = "\n") 
+  text_as_string <- tolower(paste(text, collapse = " "))
+  text_as_string <- gsub("([[:punct:]])", " ", text_as_string)
+  text_as_string <-  gsub(" +", " ", text_as_string)
+  return(unlist(strsplit(text_as_string, " ")))
+}
+\end{verbatim}
+What will processfile("somefilepath") give me?
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Continuing from last slide: }
+\framesubtitle{Try to understand what is happening in this:}
+\footnotesize
+\begin{verbatim}
+words <- processfile("DollsHouse-Eng.txt")
+helmer <- which(words == "helmer")
+for(i in 1:length(helmer))
+{
+  start <- helmer[i]-2
+  end <- helmer[i]+2
+  cat(paste(words[start:end], sep=" "))
+  cat("\n")
+  #What does cat do??
+}
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Converting the previous slide into a function}
+\footnotesize
+\begin{verbatim}
+getKwic <- function(wordsvector, word)
+{
+  word_index <- which(wordsvector == word) 
+  for(i in 1:length(word_index))
+  {
+    start <- word_index[i]-2
+    end <- word_index[i]+2
+    cat(paste(wordsvector[start:end], sep=" ")) 
+    cat("\n")
+  }
+}
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Interact with the user}
+\begin{itemize}
+\item Why? \pause
+\item How? - using readline() function.
+\scriptsize
+\begin{verbatim}
+file <- readline("Enter the name of the file you want to search in: ")
+word <- readline("Enter the word for which you want the context: ")
+context0 <- readline("Enter the number of words before and after 
+                     you want to print: ")
+context <- strtoi(readline("Enter the number of words before 
+                    and after you want to print: "))
+\end{verbatim}
+\item What will happen now?
+\item What is the difference between context0 and context?
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Modified getKwic() function}
+\begin{itemize}
+\item The previous getKwic() function we discussed printed out words with a context window of 2 words. 
+\item It has to be changed to take context from the user input.
+\footnotesize
+\begin{verbatim}
+getKwic <- function(wordsvector, word, context)
+{
+  word_index <- which(wordsvector == word) 
+  for(i in 1:length(word_index))
+  {
+    start <- word_index[i] - context
+    end <- word_index[i] + context
+    cat(paste(wordsvector[start:end], sep=" ")) 
+    cat("\n")
+  }
+}
+\end{verbatim}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Everything looks good so far}
+\framesubtitle{... but}
+\begin{itemize}
+\item What if the the word we are searching for is the very first word? \pause
+\item a small detour: if I have a vector: 
+\\ $words <- c("Robert", "Rose", "Ryan", "Richard")$
+\item What are:
+\footnotesize
+\begin{verbatim} 
+words[1]
+words[2]
+words[0]
+words[5]
+words[-1]
+words[-2]
+words[1:3]
+words[-2:3]
+words[1:7]
+\end{verbatim} 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{with that knowledge ...}
+\begin{itemize}
+\item Let us come back to the same question: What if the the word we are searching for is the very first word? \pause
+\item If I am looking for the first word, and am looking for a context of say 3 words, I will get an error at the very beginning, and the R programs stops.
+\item If I am looking for the last word, and am looking for a context of say 3 words. What happens???
+\item What should we do to avoid these situations??
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{final getKwic() function}
+\footnotesize
+\begin{verbatim}
+getKwic <- function(wordsvector, word, context)
+{
+  word_index <- which(wordsvector == word)
+  for(i in 1:length(word_index)) 
+  {
+    start <- word_index[i] - context
+    if(start < 1)
+    {
+      start <- 1
+    }
+    end <- word_index[i] + context
+    if(end >= length(wordsvector)) 
+    {
+      end <- length(wordsvector)
+    }
+   # cat(start, end) #This prints only positions, not actual words.
+    cat(paste(wordsvector[start:end], sep=" ")) 
+    cat("\n")
+  }
+}
+\end{verbatim}
+Note: Final R file for today (KWIC.R) and will be uploaded to Canvas.
+\end{frame}
+
+%Okay, fine. But how to handle extreme cases where our chosen word is the very first word or very last word??
+
+\begin{frame}
+\frametitle{How to continue from here?}
+\begin{itemize}
+\item Improve the pre-processing 
+\item Accept a different context length for before and after (e.g., 2 words before, 3 words after instead of 2 words before and 2 words after)
+\item Make this work with more than one file
+\item Add the functionality of taking the path to a folder, reading all .txt files from that folder, and do this for each file.
+\item Take a doc or pdf, extract plain-text from that and do this
+\item Exercises 8.1, 8.2 and 9.1, 9.2 in the textbook (solutions are available in the supplementary material).
+\end{itemize}
+.... and so on. (You will do some of this on thursday)
+\end{frame}
+
+\begin{frame}
+\Large Ngram analysis
+\end{frame}
+
+\begin{frame}
+\frametitle{What are Ngrams?}
+\begin{itemize}
+\item an n-gram is a ordered sequence of words. n- refers to the number of words in the sequence.
+\item unigrams - single words, bigrams - two word sequences, trigrams - three word sequences, 4grams - four word sequences and so on.
+\item If I have this sentence: "This is an example sentence", what are all possible ngrams in this?? \pause
+\item Until now, we looked at only words (their frequencies, their position of appearance, their context of appearance)
+\item n-gram analysis is about moving beyond words and looking for patterns of word sequences.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{ngram package in R}
+\begin{itemize}
+\item This package provides a lot of functions to automatically create and analyse ngrams from text strings (STRINGS).
+\item The package has several advanced functionalities, we don't need at this point.
+\item We will only talk about how to extract ngrams of varying sizes from the text, count their frequencies etc. 
+\item installation: install "ngram" package following the usual procedure.
+\item Enthusiastic students can have a look at the documentation for this package to know about all functionalities it has.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{working with ngram package}
+\scriptsize
+\begin{verbatim}
+library(ngram)
+#usual pre-processing for the file first.
+dollshouse_text <- scan("DollsHouse-Eng.txt", what = "character", sep = "\n")
+dollshouse_string <- paste(dollshouse_text, collapse = " ")
+dollshouse_string <- tolower(dollshouse_string)
+dollshouse_string <- gsub("[[:punct:]]", " ", dollshouse_string)
+dollshouse_string <- gsub(" +", " ", dollshouse_string)
+
+#Three most useful functions for us:
+trigrams <- ngram(dollshouse_string,n=3)
+trigrams_vector <- get.ngrams(trigrams)
+head(get.phrasetable(trigrams),n = 10)
+\end{verbatim}
+note: Ngram.R file is on Canvas.
+\end{frame}
+
+\begin{frame}
+\frametitle{A detour into vectors (again!)}
+\begin{itemize}
+\item R has functions such as union() and intersect() which takes two vectors and returns:
+\begin{itemize}
+\item union(vector1, vector2) returns a vector that has all items that occurred in either vector1 or vector2.
+\item intersection(vector1, vector2) returns a vector that has all items that occured in BOTH the vectors.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Union-Intersection example}
+\begin{verbatim}
+a = c(1,4,44,5,12)
+b = c(1,3,5,44,2)
+c <- intersect(a,b)
+d <- union(a,b)
+c
+[1]  1 44  5
+d
+[1]  1  4 44  5 12  3  2
+\end{verbatim}
+Note: These can be string vectors as well. \\
+Hint: You can use one of these functions to get part of the answer in Question 2 of Assignment 3.
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Assignment 3 Description}
+\begin{itemize}
+\item Topics: Last week, and This Week's content (Chapters 6--9 in Textbook)
+\item Questions: 2 questions (4\% + 6\% of your grade)
+\item Deadline: 24th February
+\item Description: On Canvas
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Thursday}
+\begin{itemize}
+\item Assignment 2 discussion
+\item Practice exercises for using what we learned today (KWIC and N-grams)
+\item To do: Read this article "Data Mining reveals the rise of ISIS propaganda on Twitter" (\url{https://goo.gl/QqTT9k}). We will start the class with a discussion on that on thursday
+\end{itemize}
+\end{frame}
+%briefly discuss: https://arxiv.org/pdf/1702.02263.pdf
+%https://www.technologyreview.com/s/603626/data-mining-reveals-the-rise-of-isis-propaganda-on-twitter/
+
+\end{document}
+

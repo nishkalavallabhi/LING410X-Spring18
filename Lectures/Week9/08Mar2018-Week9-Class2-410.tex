@@ -1,0 +1,140 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\author[Sowmya Vajjala]{Instructor: Sowmya Vajjala}
+
+\title[LING 410X]{LING 410X: Language as Data}
+\subtitle{Semester: Spring '18}
+
+\date{8 March 2018}
+
+\institute{Iowa State University, USA}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\begin{frame}\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Class Outline}
+\begin{itemize}
+\item Midterm feedback summary
+\item Question from Tuesday's class
+\item Discussion about your final project ideas
+\item Time for Assignment 4 
+\item Reminder: Assignment 4 is due on 10th March 2018.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Mid-term feedback: summary -1}
+\framesubtitle{Delta for the course (for me)}
+\begin{itemize}
+\item Meet in lab every time (Hmm, not in my control!)
+\item More help sessions like on 2/23 (I can try for one more)
+\item Windows computers and errors (Hmm!)
+\item Spend more time explaining concepts, discuss specifics of some functions (Okay, I will do this more often)
+\end{itemize}
+%5-10min
+\end{frame}
+
+\begin{frame}
+\frametitle{Mid-term feedback: summary -2}
+\framesubtitle{Delta for the student (for you)}
+\begin{itemize}
+\item Practice more 
+\item Participate more
+\item Read the book/read more about R functions
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\Large Last class' question
+\end{frame}
+
+\begin{frame}
+\frametitle{do.call}
+\begin{itemize}
+\item It takes two arguments - a function (any function), and a list. 
+\item What it does is - it applies that function on each element of a list, and returns output in the form of the first function
+\item Example 1:
+list1  $<-$ list(11,12,13,14) 
+and say: \\ \tiny
+(a) do.call(cbind, list1)
+\\ (b) cbind(cbind(list1[[1]]),cbind(list1[[2]]),cbind(list1[[3]]), cbind(list1[[4]]))
+\\ \normalsize (a) and (b) do the same thing.
+\pause
+\normalsize \item It applies cbind on each element of the list, and binds all these cbind outputs together. 
+\item This in essence becomes rbind(list1) for such a simple case.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{do.call}
+\framesubtitle{The real use}
+\begin{itemize}
+\item Let us say we have a embedded list:
+\\ list2 = list(list(1,2,3), list(4,5,6), list(7,8,9))
+
+\item Using cbind here:
+\scriptsize 
+\\ (c) do.call(cbind,list2)
+\\ (d) cbind(cbind(list2[[1]]),cbind(list2[[2]]),cbind(list2[[3]]))
+\normalsize \item (c) and (d) do the same thing, and gives us a matrix:
+\\ 1 4 7
+\\2 5 8
+\\3 6 9 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Discussion about final projects}
+Each person/team: please share with others what ideas you have for your final project addressing the following questions:
+\begin{itemize}
+\item what is the corpus you have in mind?
+\item how big is it? (how many texts/examples etc)
+\item Do you know how to get it in a format R can understand?
+\item what are the questions you want to address with that dataset?
+\item how will you address these questions?
+\item how would you evaluate what you did?
+\end{itemize}
+\pause Remember: initial report is due on 7th April!
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\Large Assignment 4 practice \& discussion
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Working with csv files that have text columns}
+\begin{itemize}
+\item What is a csv file? 
+\item While reading in a csv file:
+\begin{verbatim}
+data_train <- read.csv("a4-train.csv",header = TRUE)
+\end{verbatim}
+What is header = TRUE mean? \pause
+\item How do I access individual columns in this? \pause
+\item So, how do I access only text column? \pause
+\item Let us say I do something like: \\ 
+$mega <- paste(mydata["text"], collapse=" ")$
+What happens? How do I get answers for Q1 in A4? \pause
+\item stringsAsFactors=FALSE argument in read.csv
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Remaining time}
+\Large Assignment 4 practice \& any other questions you have
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\Large Happy Spring break!!
+\\ \small Topic for the week after break: Topic Models.
+\end{frame}
+
+\end{document}

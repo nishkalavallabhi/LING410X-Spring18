@@ -1,0 +1,424 @@
+                                Incorporating Dialectal Variability
+                        for Socially Equitable Language Identification
+           David Jurgens                            Yulia Tsvetkov                              Dan Jurafsky
+         Stanford University                     Stanford University                         Stanford University
+                        {jurgens,tsvetkov,jurafsky}@stanford.edu
+                                                                    1. @username R u a wizard or wat gan sef: in d mornin -
+                        Abstract                                        u tweet, afternoon - u tweet, nyt gan u dey tweet. beta
+                                                                        get ur IT placement wiv twitter
+     Language identification (LID) is a criti-                      2. Be the lord lantern jaysus me heart after that match!!!
+     cal first step for processing multilingual                     3. Aku hanya mengagumimu dari jauh sekarang . RDK
+                                                                        ({}) * last tweet about you - - , maybe
+     text. Yet most LID systems are not de-
+     signed to handle the linguistic diversity of                Figure 1: Challenges for socially-equitable LID in Twitter
+                                                                 include dialectal text, shown from Nigeria (#1) and Ireland
+     global platforms like Twitter, where lo-                    (#2), and multilingual text (Indonesian and English) in #3.
+     cal dialects and rampant code-switching
+     lead language classifiers to systematically
+     miss minority dialect speakers and mul-                     graphic and dialectal variation. As a result, these
+     tilingual speakers. We propose a new                        systems systematically misclassify texts from pop-
+     dataset and a character-based sequence-to-                  ulations with millions of speakers whose local
+     sequence model for LID designed to sup-                     speech differs from the majority dialects (Hovy
+     port dialectal and multilingual language                    and Spruit, 2016; Blodgett et al., 2016).
+     varieties. Our model achieves state-of-the-                     Multiple systems have been proposed for broad-
+     art performance on multiple LID bench-                      coverage LID at the global level (McCandless,
+     marks. Furthermore, in a case study us-                     2010; Lui and Baldwin, 2012; Brown, 2014; Jaech
+     ing Twitter for health tracking, our method                 et al., 2016). However, only a handful of tech-
+     substantially increases the availability of                 niques have addressed the challenge of linguis-
+     texts written by underrepresented popula-                   tic variability of global data, such as the dialec-
+     tions, enabling the development of “so-                     tal variability and multilingual text seen in Fig-
+     cially inclusive” NLP tools.                                ure 1. These techniques have typically focused
+                                                                 only on limited aspects of variability, e.g., indi-
+1    Introduction                                                vidual dialects like African American Vernacu-
+Language identification (LID) is an essential first              lar English (Blodgett et al., 2016), online speech
+step for NLP on multilingual text. In global set-                (Nguyen and Doğruöz, 2013), similar languages
+tings like Twitter, this text is written by authors              (Bergsma et al., 2012; Zampieri et al., 2014a), or
+from diverse linguistic backgrounds, who may                     word-level code switching (Solorio et al., 2014;
+communicate with regional dialects (Gonçalves                   Rijhwani et al., 2017).
+and Sánchez, 2014) or even include parallel trans-                  In this work, our goal is to devise a socially
+lations in the same message to address different                 equitable LID, that will enable a massively mul-
+audiences (Ling et al., 2013, 2016). Such di-                    tilingual, broad-coverage identification of popu-
+alectal variation is frequent in all languages and               lations speaking underrepresented dialects, mul-
+even macro-dialects such as American and British                 tilingual messages, and other linguistic varieties.
+English are composed of local dialects that vary                 We first construct a large-scale dataset of Twit-
+across city and socioeconomic development level                  ter posts across the world (§2). Then, we intro-
+(Labov, 1964; Orton et al., 1998). Yet current sys-              duce an LID system, E QUI LID, that produces per-
+tems for broad-coverage LID—trained on dozens                    token language assignments and obtains state-of-
+of languages—have largely leveraged European-                    the-art performance on four LID tasks (§3), out-
+centric corpora and not taken into account demo-                 performing broad-coverage LID benchmarks by
+                                                             51
+    Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (Short Papers), pages 51–57
+                                                             c
+              Vancouver, Canada, July 30 - August 4, 2017. 2017     Association for Computational Linguistics
+                                          https://doi.org/10.18653/v1/P17-2009
+
+up to 300%. Finally, we present a case study on us-       from reciprocal mentions to locate 132M users.
+ing Twitter for health monitoring and show that (1)           To identify monolingual users, we classify mul-
+current widely-used systems suffer from lower re-         tiple tweets by the same individual and consider an
+call rates for texts from developing countries, and       author monolingual if they had at least 20 tweets
+(2) our system substantially reduces this disparity       and 95% were labeled with one language `. All
+and enables socially-equitable LID.                       tweets by that author are then treated as being `.
+                                                          We use this relabeling process to automatically
+2    Curating Socially-Representative Text                identify misclassified tweets, which when aggre-
+                                                          gated geographically, can potentially capture re-
+Despite known linguistic variation in languages,          gional dialects and topics.1 We construct separate
+current broad-coverage LID systems are trained            sets of monolinguals using langid.py and CLD2 as
+primarily on European-centric sources (e.g., Lui          classifiers to mitigate the biases of each.
+and Baldwin, 2014), often due to data availabil-          Social and Topical Diversity Authors modulate
+ity. Further, even when training incorporates             their writing style for different social registers
+seemingly-global texts from Wikipedia, their au-          (Eisenstein, 2015; Tatman, 2015). Therefore, we
+thors are still primarily from highly-developed           include corpora from different levels of formality
+countries (Graham et al., 2014). This latent bias         across a wide range of topics. Texts were gathered
+can significantly affect downstream applications          for all of the 70 languages from (1) Wikipedia arti-
+(as we later show in §4), since language ID is often      cles and their more informal Talk pages, (2) Bible
+assumed to be a solved problem (McNamee, 2005)            and Quran translations (3) JRC-Acquis (Stein-
+and most studies employ off-the-shelf LID sys-            berger et al., 2006), a collection of European leg-
+tems without considering how they were trained.           islation, (4) the UN Declaration of Human Rights,
+   We aim to create a socially-representative cor-        (5) the Watchtower online magazines, (6) the 2014
+pus for LID that captures the variation within a          and 2015 iterations of the Distinguishing Simi-
+language, such as orthography, dialect, formality,        lar Languages shared task (Zampieri et al., 2014b,
+topic, and spelling. Motivated by the recent lan-         2015), and (7) the Twitter70 dataset (Trampus,
+guage survey of Twitter (Trampus, 2016), we next          2016). We also include single-language corpora
+describe how we construct this corpus for 70 lan-         drawn from slang websites (e.g., Urban Dictio-
+guages along three dimensions: geography, social          nary) and the African American Vernacular En-
+and topical diversity, and multilinguality.               glish data from Blodgett et al. (2016). For all
+Geographic Diversity We create a large-scale              sources, we extract instances sequentially by ag-
+dataset of geographically-diverse text by boot-           gregating sentences up to 140 characters.
+strapping with a people-centric approach (Bam-            Multilingual Diversity Authors are known to
+man, 2015) that treats location and languages-            generate multilingual texts on Twitter (Ling et al.,
+spoken as demographic attributes to be inferred           2013, 2014), with Rijhwani et al. (2017) estimat-
+for authors. By inferring both for Twitter users          ing that 3.5% of tweets are code-switched. To cap-
+and then collecting documents from monolingual            ture the potential diversity in multilingual docu-
+users, we ensure that we capture regional variation       ments, we perform data augmentation to synthet-
+in a language, rather than focusing on a particular       ically construct multilingual documents of tweet
+aspect of linguistic variety.                             length by (1) sampling texts for two languages
+   Individuals’ locations are inferred using the          from arbitrary sources, (2) with 50% chance for
+method of Compton et al. (2014) as implemented            each, truncating a text at the first occurrence of
+by Jurgens et al. (2015). The method first identi-        phrasal punctuation, and (3) concatenating the two
+fies the individuals who have reliable ground truth       texts together and adding it to the dataset (if ≤
+locations from geotagged tweets and then infers           140 characters). We create only sentence-level
+the locations of other individuals as the geographic      or phrase-level code-switching rather than word-
+center of their friends’ locations, iteratively apply-    level switches to avoid classifier ambiguity for
+ing this inference method to the whole social net-        loan words, which is known to be a significant
+work. The method is accurate to within tens of            challenge (Çetinoğlu et al., 2016).
+kilometers on urban and rural users (Johnson et al.,          1
+                                                                A manual analysis of 500 tweets confirmed that nearly
+2017), which is sufficient for the city-level analy-      all cases (98.6%) where the classifier’s label differed from
+sis we use here. We use a network of 2.3B edges           the author’s inferred language were misclassifications.
+                                                       52
+
+Corpus Summary The geographically-diverse               a maximum of 50K instances per source and lan-
+corpus was constructed from two Twitter datasets:       guage to reduce training bias. A total 52.3M in-
+1.3B tweets drawn from a 10% sample of all              stances were used for the final datasets. Multi-
+tweets from March 2014 and 14.2M tweets drawn           lingual instances were generated from texts within
+from 1% sample of all geotagged tweets from             their respective split to prevent test-train leakage.
+November 2016. Ultimately, we collected 97.8M           For the Twitter70 dataset, we use identical train-
+tweets from 1.5M users across 197 countries and         ing, development, and test splits as Jaech et al.
+in 53 languages. After identifying monolingual          (2016). The same trained model is used for all
+authors in the dataset, 9.4% of the instances           evaluations. All parameter optimization was per-
+(9.1M) were labeled by CLD2 or langid.py with           formed on the development set using adadelta
+a different language than that spoken by its au-        (Zeiler, 2012) with mini-batches of size 64 to train
+thor; since nearly all are misclassifications, we       the models. The model was trained for 2.7M steps,
+view these posts as valuable data to correct sys-       which is roughly three epochs.
+tematic bias.                                           Comparison Systems We compare against two
+   A total of 258M instances were collected for the     broad-coverage LID systems, langid.py (Lui and
+topically and socially-diverse corpora. Multilin-       Baldwin, 2012) and CLD2 (McCandless, 2010),
+gual instances were created by sampling text from       both of which have been widely used for Twit-
+all language pairs; a total of 3.2M synthetic in-       ter within in the NLP community. CLD2 is
+stances were created. Full details are reported in      trained on web page text, while langid.py was
+Supplementary Material.                                 trained on newswire, JRC-Acquis, web pages, and
+                                                        Wikipedia. As neither was designed for Twitter,
+3    Equitable LID Classifier                           we preprocess text to remove user mentions, hash-
+                                                        tags, and URLs for a more fair comparison. For
+We introduce E QUI LID, and evaluate it on mono-
+                                                        multilingual documents, we substitute langid.py
+lingual and multilingual tweet-length text.
+                                                        (Lui and Baldwin, 2012) with its extension, Poly-
+Model Character-based neural network architec-
+                                                        glot, described in Lui et al. (2014) and designed
+tures are particularly suitable for LID, as they
+                                                        for that particular task.
+facilitate modeling nuanced orthographic and
+phonological properties of languages (Jaech et al.,        We also include the results reported in Jaech
+2016; Samih et al., 2016), e.g., capturing regu-        et al. (2016), who trained separate models for two
+lar morpheme occurrences within the words of a          benchmarks used here. Their architecture uses
+language. Further, character-based methods sig-         a convolutional network to transform each input
+nificantly reduce the model complexity compared         word into a vector using its characters and then
+to word-based methods; the latter require sepa-         feed the word vectors to an LSTM encoder that de-
+rate neural representations for each word form and      codes to per-word soft-max distributions over lan-
+therefore are prohibitive in multilingual environ-      guages. These word-language distributions are av-
+ments that easily contain tens of millions of unique    eraged to identify the most-probable language for
+words. We use an encoder–decoder architecture           the input text. In contrast, our architecture uses
+(Cho et al., 2014; Sutskever et al., 2014) with         only character-based representations and produces
+an attention mechanism (Bahdanau et al., 2015).         per-token language assignments.
+The encoder and the decoder are 3-layer recurrent       Benchmarks We test the monolingual setting
+neural networks with 512 gated recurrent units          with three datasets: (1) the test portion of the
+(Chung et al., 2014). The model is trained to to-       geographically-diverse corpus from §2, which
+kenize character sequence input based on white          covers 53 languages (2) the test portion of the
+space and output a sequence with each token’s           Twitter70 dataset, which covers 70 languages and
+language, with extra token types for punctuation,       (3) the TweetLID shared task (Zubiaga et al.,
+hashtags, and user mentions.                            2016), which covers 6 languages. The Tweet-
+Setup The data from our socially-representative         LID data includes Galician, which is not one of
+corpus (§2) was split into training, development,       the 70 languages we include due to its relative in-
+and test sets (80%/10%/10%, respectively), sepa-        frequency. Therefore, we report results only on
+rately partitioning the data from each source (e.g.,    the non-Galician portions of the data. Multilin-
+Wikipedia). Due to different sizes, we imposed          gual LID is tested using the test data portion of the
+                                                     53
+
+                         Geo.-Diverse Tweets               Tweet 70             TweetLID†       Multilingual Tweets
+               System   Macro-F1 Micro-F1           Macro-F1 Micro-F1            Macro-F1       Macro-F1 Micro-F1
+           langid.py     0.234        0.960          0.378         0.769           0.580         0.302          0.240
+                 CLD2     0.217        0.930          0.497         0.741           0.544         0.360          0.629
+  Jaech et al. (2016)‡                                0.912                         0.787
+              E QUI LID   0.598        0.982          0.920         0.905           0.796         0.886          0.853
+Table 1: Results on the four benchmarks. ‡ results reported in Jaech et al. (2016) are separate models optimized for each
+benchmark † excludes Galician.  For multilingual tweets, we use the extension to langid.py described in Lui et al. (2014).
+synthetically-constructed multilingual data from                are the most challenging, with 177 Bosnian and
+70 languages. Models are evaluated using macro-                 65 Slovenian tweets classified as Croatian. This
+averaged and micro-averaged F1. Macro-averaged                  is unsurprising, considering that even for a human
+F1 denotes the average F1 for each language, in-                annotator this task is challenging (or impossible).
+dependent of how many instances were seen for                   For example, a misclassified Bosnian tweet Sočni
+that language. Micro-averaged F1 denotes the F1                 čokoladni biskvit recept (“juicy chocolate biscuit
+measured from all instances and is sensitive to the             recipe”) would be the same in Croatian. Indo-
+skew in the distribution of languages in the dataset.           Iranian languages contribute 39 errors, with Ben-
+Results E QUI LID attains state-of-the-art perfor-              gali, Marathi, Nepali, Punjabi, and Urdu tweets
+mance over the other broad-coverage LID systems                 classified as Hindi. Among Germanic languages,
+on all benchmarks. We attribute this increase to                Danish, Norwegian, and Swedish are frequently
+more representative training data; indeed, Jaech                confused, contributing 22 errors.
+et al. (2016) reported langid.py obtains a substan-                Another major source of errors is due to translit-
+tially higher F1 of 0.879 when retrained only on                eration and code switching with English: 328 mes-
+Twitter70 data, underscoring the fact that broad-               sages in Hindi, Urdu, Tagalog, Telugu, and Pun-
+coverage systems are typically not trained on data              jabi were classified as English, contributing 36.1%
+as linguistically diverse as seen in social media.              of errors. A Hindi-labeled tweet dost tha or ra-
+Despite being trained for general-purpose, E QUI -              hega ... dont wory ... but dherya rakhe (“he was
+LID also outperformed the benchmark-optimized                   and will remain a friend ... don’t worry ... but
+models of Jaech et al. (2016).                                  have faith”) is a characteristic example, misclas-
+   In the multilingual setting, E QUI LID substan-              sified by our system as English. Reducing these
+tially outperforms both Polyglot and CLD2, with                 types of errors is currently difficult due to the lack
+over a 300% increase in Macro-F1 over the former.               of transliterated examples for these languages.
+Further, because our model can also identify the
+spans in each language, we view its performance                 4    Case Study: Health Monitoring
+as an important step towards an all-languages
+solution for detecting sentence and phrase-level                We conclude with a real-world case study on us-
+switching between languages. Indeed, in the                     ing Twitter posts as a real-time source of infor-
+Twitter70 dataset, E QUI LID found roughly 5% of                mation for tracking health and well-being trends
+the test data are unmarked instances of code-                   (Paul and Dredze, 2011; Achrekar et al., 2011;
+switching, one of which is the third example in                 Aramaki et al., 2011). This information is es-
+Figure 1.                                                       pecially critical for regions where local authori-
+Error Analysis To identify main sources of clas-                ties may not have sufficient resources to identify
+sification errors, we manually analyzed the out-                trends otherwise. Commonly, trend-tracking ap-
+puts of E QUI LID on the test set of Twitter70. The             proaches first apply language identification to se-
+dataset contains 9,572 test instances, 90.5% of                 lect language-specific content, and then apply so-
+which were classified correctly by our system; we               phisticated NLP techniques to identify content re-
+discuss below sources of errors in the remaining                lated to their target phenomena, e.g., distinguish-
+909 misclassified instances.                                    ing a flu comment from a hangover-related one.
+   Classification of closely related languages with             This setting is where socially-inclusive LID sys-
+overlapping vocabularies written in a same script               tems can make real, practical impact: LID systems
+is the biggest source of errors (374 misclassified              that effectively classify languages of underrepre-
+instances, 41.1% of all errors). Slavic languages               sented dialects can substantially increase the re-
+                                                            54
+
+call of data for trend-tracking approaches, and thus                                              1.0
+help reveal dangerous trends in infectious diseases
+in the areas that need it most.
+                                                                       Recall of English Tweets
+   Language varieties are associated, among other                                                 0.9
+factors, with social class (Labov, 1964; Ash, 2002)
+and ethnic identity (Rose, 2006; Mendoza-Denton,
+                                                                                                  0.8
+                                                                       by Language ID Systems
+1997; Dubois and Horvath, 1998). As a case
+study, we evaluate the efficacy of LID systems in
+                                                                                                                             classifier
+identifying English tweets containing health lex-
+                                                                                                  0.7                             langid.py
+icons, across regions with varying Human De-
+                                                                                                                                  CLD2
+velopment Index (HDI).2 We compare E QUI LID                                                                                      EquiLID
+against langid.py and CLD2.                                                                       0.6
+Setup A list of health-related terms was com-                                                       0.4   0.5   0.6   0.7   0.8     0.9       1.0
+piled from lexicons for influenza (Lamb et al.,                                                           Human Development Index
+2013); psychological well-being (Smith et al.,
+                                                                                                           of Text's Origin Country
+2016; Preoţiuc-Pietro et al., 2015); and temporal                     Figure 2: Estimated recall of tweets with health-related
+orientation lexica correlated with age, gender and                     terms according to a logit regression on the Human Devel-
+personality traits (Park et al., 2016). We incorpo-                    opment Index of the tweet’s origin country; bands show 95%
+                                                                       confidence interval.
+rate the 100 highest-weighted alphanumeric terms
+from each lexicon, for a total of 385 unique terms.
+                                                                       0.527) and India (HDI 0.624), which have tens of
+   To analyze the possible effect of regional lan-
+                                                                       millions of anglophones each. E QUI LID provides
+guage, we selected 25 countries with English-
+                                                                       a 23.9% and 17.4% improvement in recall of En-
+speaking populations and constructed 62 bounding
+                                                                       glish tweets for each country, respectively. This
+boxes for major cities therein for study (listed in
+                                                                       study corroborates our hypothesis that socially-
+Supplementary Material). Using the Gnip API, a
+                                                                       equitable training corpora are an essential first step
+total of 984K tweets were collected during January
+                                                                       towards socially-equitable NLP.
+2016 which used at least one term and were au-
+thored within one of the bounding boxes. As these                      5               Conclusion
+tweets are required to contain domain-specific
+terms, the vast majority are English.3 We there-                       Globally-spoken languages often vary in how they
+fore measure each system’s performance accord-                         are spoken according to regional dialects, topics,
+ing to what percent of these tweets they classify as                   or sociolinguistic factors. However, most LID sys-
+English, which estimates their Recall.                                 tems are not designed and trained for this linguis-
+Results To understand how Human Development                            tic diversity, which has downstream consequences
+Index relates to LID performance, we train a Logit                     for what types of text are considered a part of the
+Regression to predict whether a tweet with one of                      language. In this work, we introduce a socially-
+the target terms will be recognized as English ac-                     equitable LID system, E QUI LID, built by (1) cre-
+cording to the HDI of the tweet’s origin country.                      ating a dataset representative of the types of di-
+Figure 2 reveals increasing disparity in LID accu-                     versity within languages and (2) explicitly mod-
+racy for developing countries by the two baseline                      eling multilingual and codes-switched communi-
+models. In contrast, E QUI LID outperforms both                        cation for arbitrary language pairs. We demon-
+systems at all levels of HDI and provides 30%                          strate that E QUI LID significantly outperforms cur-
+more observations for countries with the lowest                        rent broad-coverage LID systems and, in a real-
+development levels. This performance improve-                          world case study on tracking health-related con-
+ment is increasingly critical in the global environ-                   tent, show that E QUI LID substantially reduces the
+ment as more English text is generated from pop-                       LID performance disparity between developing
+ulous developing countries such as Nigeria (HDI                        and developed countries. Our work continues a
+                                                                       recent emphasis on NLP for social good by en-
+   2
+      HDI is a composite of life expectancy, education, and            suring NLP tools fully represent all people. The
+income per capita indicators, used to rank countries into tiers        E QUI LID system is publicly available at https:
+of human development.
+    3
+      A manual analysis of a random sample of 1000 tweets              //github.com/davidjurgens/equilid and data
+showed that 99.4% were in English.                                     is available upon request.
+                                                                  55
+
+Acknowledgments                                                  (Big Data), 2014 IEEE International Conference on.
+                                                                 IEEE, pages 393–401.
+We thank the anonymous reviewers, the Stanford Data Sci-
+ence Initiative, and Twitter and Gnip for providing access
+to part of data used in this study. This work was sup-        Sylvie Dubois and Barbara M Horvath. 1998. From
+ported by the National Science Foundation through awards         accent to marker in Cajun English: A study of di-
+IIS-1514268, IIS-1159679, and IIS-1526745.                       alect formation in progress. English World-Wide
+                                                                 19(2):161–188.
+References                                                    Jacob Eisenstein. 2015.          Systematic patterning
+                                                                 in phonologically-motivated orthographic variation.
+Harshavardhan Achrekar, Avinash Gandhe, Ross                     Journal of Sociolinguistics 19(2):161–188.
+   Lazarus, Ssu-Hsin Yu, and Benyuan Liu. 2011. Pre-
+   dicting flu trends using Twitter data. In Proc. IEEE       Bruno Gonçalves and David Sánchez. 2014. Crowd-
+   Computer Communications Workshops. pages 702–                 sourcing dialect characterization through Twitter.
+   707.                                                          PloS one 9(11):e112074.
+Eiji Aramaki, Sachiko Maskawa, and Mizuki Morita.             Mark Graham, Bernie Hogan, Ralph K Straumann, and
+   2011. Twitter catches the flu: detecting influenza            Ahmed Medhat. 2014. Uneven geographies of user-
+   epidemics using Twitter. In Proc. EMNLP. pages                generated information: patterns of increasing in-
+   1568–1576.                                                    formational poverty. Annals of the Association of
+                                                                 American Geographers 104(4):746–764.
+Sharon Ash. 2002. Social class. The handbook of lan-
+   guage variation and change 24:402.                         Dirk Hovy and Shannon L Spruit. 2016. The social im-
+                                                                 pact of natural language processing. In Proc. ACL.
+Dzmitry Bahdanau, Kyunghyun Cho, and Yoshua Ben-
+                                                                 pages 591–598.
+   gio. 2015. Neural machine translation by jointly
+   learning to align and translate. In Proc. ICLR.
+                                                              Aaron Jaech, George Mulcaire, Shobhit Hathi, Mari
+David Bamman. 2015. People-Centric Natural Lan-                  Ostendorf, and Noah A Smith. 2016. Hierarchical
+   guage Processing. Ph.D. thesis, Carnegie Mellon               character-word models for language identification.
+   University.                                                   In Proc. of the 2nd Workshop on Computational Ap-
+                                                                 proaches to Code Switching.
+Shane Bergsma, Paul McNamee, Mossaab Bagdouri,
+   Clayton Fink, and Theresa Wilson. 2012. Language           I. Johnson, C. McMahon, J. Schning, and B. Hecht.
+   identification for creating language-specific Twitter         2017. The effect of population and “structural” bi-
+   collections. In Proc. of the Second Workshop on               ases on social media-based algorithms – a case study
+   Language in Social Media. pages 65–74.                        in geolocation inference across the urban-rural spec-
+                                                                 trum. In Proc. CHI.
+Su Lin Blodgett, Lisa Green, and Brendan O’Connor.
+   2016. Demographic dialectal variation in social me-        David Jurgens, Tyler Finnethy, James McCorriston,
+   dia: A case study of African-American English. In             Yi Tian Xu, and Derek Ruths. 2015. Geolocation
+   Proc. EMNLP.                                                  prediction in twitter using social networks: A criti-
+                                                                 cal analysis and review of current practice. In Proc.
+Ralf D Brown. 2014. Non-linear mapping for im-                   ICWSM.
+   proved identification of 1300+ languages. In Proc.
+   EMNLP. pages 627–632.                                      William Labov. 1964. The social stratification of En-
+                                                                 glish in New York City. Ph.D. thesis, Columbia uni-
+Özlem Çetinoğlu, Sarah Schulz, and Ngoc Thang Vu.             versity.
+   2016. Challenges of computational processing of
+   code-switching. In Proc. of the Second Workshop            Alex Lamb, Michael J Paul, and Mark Dredze. 2013.
+   on Computational Approaches to Code Switching.                Separating fact from fear: Tracking flu infections on
+Kyunghyun Cho, Bart van Merrienboer, Caglar Gul-                 Twitter. In Proc. HLT-NAACL. pages 789–795.
+   cehre, Dzmitry Bahdanau, Fethi Bougares, Holger
+   Schwenk, and Yoshua Bengio. 2014. Learning                 Wang Ling, Luis Marujo, Chris Dyer, Alan Black, and
+   phrase representations using RNN encoder–decoder              Isabel Trancoso. 2014. Crowdsourcing high-quality
+   for statistical machine translation. In Proc. EMNLP.          parallel data extraction from Twitter. In Proc. WMT.
+Junyoung Chung, Caglar Gulcehre, KyungHyun Cho,               Wang Ling, Luı́s Marujo, Chris Dyer, Alan W Black,
+   and Yoshua Bengio. 2014. Empirical evaluation of              and Isabel Trancoso. 2016. Mining parallel corpora
+   gated recurrent neural networks on sequence model-            from Sina Weibo and Twitter. Computational Lin-
+   ing. In Proc. NIPS Deep Learning workshop.                    guistics .
+Ryan Compton, David Jurgens, and David Allen. 2014.           Wang Ling, Guang Xiang, Chris Dyer, Alan W Black,
+   Geotagging one hundred million twitter accounts               and Isabel Trancoso. 2013. Microblogs as parallel
+   with total variation minimization. In Big Data                corpora. In Proc. ACL. pages 176–186.
+                                                           56
+
+Marco Lui and Timothy Baldwin. 2012. langid.py: An         Younes Samih, Suraj Maharjan, Mohammed Attia,
+  off-the-shelf language identification tool. In Proc.        Laura Kallmeyer, and Thamar Solorio. 2016. Mul-
+  ACL (system demonstrations). pages 25–30.                   tilingual code-switching identification via LSTM re-
+                                                              current neural networks. In Proc. of the 2nd Work-
+Marco Lui and Timothy Baldwin. 2014. Accurate lan-            shop on Computational Approaches to Code Switch-
+  guage identification of Twitter messages. In Proc.          ing.
+  of the 5th Workshop on Language Analysis for So-
+                                                           Laura K. Smith, Salvatore Giorgi, Rishi Solanki,
+  cial Media. pages 17–25.
+                                                              Johannes C. Eichstaedt, H. Andrew Schwartz,
+                                                              Muhammad Abdul-Mageed, Anneke Buffone, and
+Marco Lui, Jey Han Lau, and Timothy Baldwin. 2014.            Lyle H. Ungar. 2016. Does ‘well-being’ translate on
+  Automatic detection and language identification of          Twitter? In Proc. EMNLP.
+  multilingual documents. TACL 2:27–40.
+                                                           Thamar Solorio, Elizabeth Blair, Suraj Mahar-
+Michael McCandless. 2010. Accuracy and perfor-                jan, Steven Bethard, Mona Diab, Mahmoud
+  mance of Google’s compact language detector. Blog           Gohneim, Abdelati Hawwari, Fahad AlGhamdi, Ju-
+  post.                                                       lia Hirschberg, Alison Chang, and Pascale Fung.
+                                                              2014. Overview for the first shared task on lan-
+Paul McNamee. 2005. Language identification: a                guage identification in code-switched data. In Proc.
+  solved problem suitable for undergraduate instruc-          of the First Workshop on Computational Approaches
+  tion. Journal of Computing Sciences in Colleges             to Code Switching. pages 62–72.
+  20(3):94–101.                                            Ralf Steinberger, Bruno Pouliquen, Anna Widiger,
+                                                              Camelia Ignat, Tomaz Erjavec, Dan Tufis, and
+Norma Catalina Mendoza-Denton. 1997.              Chi-        Dániel Varga. 2006. The jrc-acquis: A multilingual
+  cana/Mexicana identity and linguistic variation: An         aligned parallel corpus with 20+ languages. arXiv
+  ethnographic and sociolinguistic study of gang affil-       preprint cs/0609058 .
+  iation in an urban high school. Ph.D. thesis, Stan-
+  ford University.                                         Ilya Sutskever, Oriol Vinyals, and Quoc VV Le. 2014.
+                                                              Sequence to sequence learning with neural net-
+Dong-Phuong Nguyen and A Seza Doğruöz. 2013.                works. In Proc. NIPS.
+  Word level language identification in online mul-        Rachael Tatman. 2015. # go awn: Sociophonetic vari-
+  tilingual communication. In Proc. EMNLP. pages              ation in variant spellings on twitter. Working Papers
+  857–862.                                                    of the Linguistics Circle 25(2):97–108.
+Harold Orton, Stewart Sanderson, and John Widdow-          Mitja Trampus. 2016.              Evaluating language
+  son. 1998. The linguistic atlas of England. Psy-            identification performance.              Blog post.
+  chology Press.                                              Https://blog.twitter.com/2015/evaluating-language-
+                                                              identification-performance.
+Gregory Park, H Andrew Schwartz, Maarten Sap, Mar-         Marcos Zampieri, Liling Tan, Nikola Ljubešic, and
+  garet L Kern, Evan Weingarten, Johannes C Eich-             Jörg Tiedemann. 2014a. A report on the DSL shared
+  staedt, Jonah Berger, David J Stillwell, Michal             task 2014. In Proc. of the First Workshop on Apply-
+  Kosinski, Lyle H Ungar, et al. 2016. Living in the          ing NLP Tools to Similar Languages, Varieties and
+  past, present, and future: Measuring temporal orien-        Dialects. pages 58–67.
+  tation with language. Journal of personality .
+                                                           Marcos Zampieri, Liling Tan, Nikola Ljubešic, and
+Michael J Paul and Mark Dredze. 2011. You are what            Jörg Tiedemann. 2014b. A report on the dsl shared
+  you tweet: Analyzing Twitter for public health. In          task 2014. In Proc. of the First Workshop on Apply-
+  Proc. ICWSM.                                                ing NLP Tools to Similar Languages, Varieties and
+                                                              Dialects. pages 58–67.
+Daniel Preoţiuc-Pietro, Svitlana Volkova, Vasileios       Marcos Zampieri, Liling Tan, Nikola Ljubešic, Jörg
+  Lampos, Yoram Bachrach, and Nikolaos Aletras.               Tiedemann, and Preslav Nakov. 2015. Overview
+  2015. Studying user income through language,                of the DSL shared task 2015. In Proc. of the Joint
+  behaviour and affect in social media. PloS one              Workshop on Language Technology for Closely Re-
+  10(9):e0138717.                                             lated Languages, Varieties and Dialects. pages 1–9.
+Shruti Rijhwani, Royal Sequiera, Monojit Choud-            Matthew D Zeiler. 2012. Adadelta: an adaptive learn-
+  hury, Kalika Bali, and Chandra Sekhar Maddila.              ing rate method. arXiv preprint arXiv:1212.5701 .
+  2017. Estimating code-switching on twitter with
+                                                           Arkaitz Zubiaga, Inaki San Vicente, Pablo Gamallo,
+  a novel generalized word-level language detection
+                                                              José Ramom Pichel, Inaki Alegria, Nora Aranberri,
+  technique. In Proc. ACL.
+                                                              Aitzol Ezeiza, and Vı́ctor Fresno. 2016. TweetLID:
+                                                              a benchmark for tweet language identification. Lan-
+Mary Aleene Rose. 2006. Language, place and identity          guage Resources and Evaluation 50(4):729–766.
+  in later life. Stanford University.
+                                                        57
+

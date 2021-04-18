@@ -1,0 +1,185 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+
+\hypersetup{
+    colorlinks,%
+    citecolor=blue,%
+    filecolor=blue,%
+    linkcolor=blue,%
+    urlcolor=blue 
+    %urlcolor=mygreylink     % can put red here to better visualize the links
+}
+
+\author[Sowmya Vajjala]{Instructor: Sowmya Vajjala}
+
+\title[LING 410X]{LING 410X: Language as Data}
+\subtitle{Semester: Spring '18}
+
+\date{18 January 2018}
+
+\institute{Iowa State University, USA}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\begin{frame}\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Class outline}
+\begin{itemize}
+\item Some simple text processing functions in R: regular expressions %25 min
+\item Practice: Counting word frequencies in a text  %follow the one from textbook, Chap 2. - 25 min.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\Large Simple text processing with regular expressions - Overview
+\end{frame}
+
+\begin{frame}
+\frametitle{What are regular expressions?}
+\begin{itemize}
+\item They are a special strings of text used to search and extract matching patterns from a large piece of text.
+\item Example: Let us say I want to extract all money expressions from a news article. I will create a regular expression to cover all patterns of describing money (25.99\$, 25\$, 25 Dollars etc) and use that to collect a list of all money expressions. \pause
+\item Example 2: I may want to collect all phone numbers or email addresses on English department website. \pause
+\item There is a limit to what kind of things we can search for using regular expressions. 
+\item There is a specific syntax to using them. 
+\item Yet, they are one of the most basic and powerful text processing tools. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Why/When do we need them?}
+\begin{itemize}
+\item As mentioned in the examples, for pattern extraction from text.
+\item If you know the kind of patterns you are looking for, go for regular expressions.
+\item If you know there are patterns but do not know what they are or how to get them, go to text classification, topic modeling and such advanced stuff. \pause
+\item They have a very restricted syntax, so once you know what your pattern is, the only task left is to use the syntax to match your pattern.\pause
+\item in R: grep() and grepl() functions.
+\item They are already implemented for your MacOS terminal, for any other programming language you may end up using at some point in future. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Basic syntax and vocabulary of regular expressions}
+Let us take this sentence: "This is a sentence to demonstrate regex usage."
+\begin{itemize}
+\item The expression "a" just matches all occurrences of "a" in this. \pause
+\item $[abc]$ matches a or b or c. \pause
+\item "." (period) matches everything except newline. If you want to match a period, "$\setminus\setminus.$" \pause
+\item "s.e" matches anything between s and e. (in the above example, "sentence"). \pause
+\item "a+" matches wherever a occurs once or more times consecutively.
+\item "a*" matches zero or more occurrences of "a". \pause
+\item "$\setminus\setminus d$" matches one digit. ""$\setminus\setminus D$" matches a non-digit. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Basic syntax and vocabulary of regular expressions}
+\begin{itemize}
+\item $[a-z]$ matches any lower case letter. 
+\item $"a|b"$ matches "a" or "b".
+\item "\^{}a" matches all strings in a vector that start with "a"
+\item $"a\$"$ matches all strings in a vector that end with "a"
+\item $a\{2,4\}$ matches if a occurs consecutively 2 to 4 times (aa, aaa, aaaa)
+\end{itemize} \pause
+..... many more. Look at the tutorial document for Assignment 1 for more.  For even more, search online. Lot of tutorials available for general regex and R specific regex usage. 
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Using Regex in R}
+\tiny
+\begin{verbatim}
+> library(stringr)
+> sentence = "This is a sentence to demonstrate regex usage
+ and this contains a word Mississippi and another word Missouri."
+> grepl("a",sentence) #returns TRUE if there is that pattern "a" in string sentence.
+> grepl("s{2,3}",sentence) #What does this return?
+> grepl("s{3}",sentence)
+> library(stringr)
+> str_count(sentence,"a") #returns the number of times pattern "a" occurs in the sentence.
+> str_count(sentence,"s{2,3}") #Returns?
+> sub("a","b",sentence) #substitutes first occurrence of a with b.
+> gsub("a","b",sentence) #substitutes all occurrences of a with b.
+> sentence #note that all this will not change sentence. Why?
+\end{verbatim}
+Other useful functions: \url{https://cran.r-project.org/web/packages/stringr/vignettes/stringr.html}
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\Large Practice Exercise
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Recap: R code for counting word frequencies} 
+\footnotesize
+\begin{verbatim}
+setwd("~/Dropbox/ClassroomSlides-BothCourses/LING410X/")
+english <- scan("DollsHouse-Eng.txt", what = "character", sep = "\n")
+english.start <- which(english == "DRAMATIS PERSONAE")
+english.end <- which(english == 
+      "(The sound of a door shutting is heard from below.)")
+actual_english <- english[english.start:english.end]
+actual_english_string <- paste(actual_english, collapse = " ")
+english_lower <- tolower(actual_english_string)
+english_words <- strsplit(english_lower, "\\W+")
+sorted_freqs_english <- sort(table(english_words), decreasing = TRUE)
+plot(sorted_freqs_english[1:10], type="b")
+\end{verbatim}
+\end{frame}
+
+\begin{frame}
+\frametitle{Today's handson exercise}
+\begin{itemize}
+\item Take the word frequency counter code from Tuesday, and make it work on any given gutenberg.org book (in .txt format).
+\item One useful function: startsWith("Language as Data", "Lan") is useful to check if a given string/line of words in the first argument starts with the second argument. 
+\item Note: You have to only change three lines from what I used on Tuesday.
+\item Note 2: You perhaps should look at 4-5 gutenberg text files to be able to "change" these lines. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Solution}
+\begin{itemize}
+\item I am uploading the enhanced version of the tutorial file from previous class. That contains your solution.
+\item In short it is this:
+\end{itemize}
+\tiny
+\begin{verbatim}
+english <- scan("DollsHouse-Eng.txt", what = "character", sep = "\n")
+meta.top.end <- which(startsWith(english,"*** START OF THIS PROJECT GUTENBERG EBOOK"))
+meta.bottom.start <- which(startsWith(english, "End of the Project Gutenberg EBook"))
+actual_english <- english[meta.top.end+1:meta.bottom.start+1]
+actual_english_string <- paste(actual_english, collapse = " ")
+english_lower <- tolower(actual_english_string)
+english_words <- strsplit(english_lower, "\\W+")
+sorted_freqs_english <- sort(table(english_words), decreasing = TRUE)
+plot(sorted_freqs_english[1:10], type="b")
+\end{verbatim}
+\end{frame}
+
+\begin{frame}
+\frametitle{Post your response in the discussion forum for today}
+\begin{itemize}
+\item In Doll's House, how many times did: "you know" appear? 
+\item How many times did numbers  appear in the text (99712 is to be counted as 1 number. Not 5)?
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Next Week}
+\begin{itemize}
+\item processing different file formats (e.g., Doc files, Webpages, PDF files, news websites, tweets etc)
+\item Optional Reading: Chapter 10 in the textbook (you don't have to run those code examples)
+\item We will get back to processing of text files in the week after this (once you appreciate the complex issues that arise because we have so many different formats of textual data!)
+\item Note: I will talk about how to store these programs in the next 1-2 weeks. 
+\end{itemize}
+\end{frame}
+
+\end{document}
+
+
+

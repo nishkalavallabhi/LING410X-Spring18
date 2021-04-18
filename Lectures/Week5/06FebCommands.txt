@@ -1,0 +1,64 @@
+davidc <- scan("davidc.txt", what = "character", sep = "\n")
+davidc.chap.positions <- grep("^CHAPTER \\d", davidc)
+length(davidc.chap.positions)
+
+line_number <- seq(1:5)
+names <- c("Santa", "Banta", "Manta", "Tanta", "Anton")
+college <- c("LAS", "Business", "Engineering", "LAS", "VetMed")
+df <- data.frame(line_number,names, college)
+
+moby <- scan("mobydick.txt", what = "character", sep = "\n")
+moby.start <- which (moby ==  "CHAPTER 1. Loomings.")
+moby.end <- which (moby == "orphan.")
+moby.actual <- moby[moby.start:moby.end]
+moby.chap.positions <- grep("^CHAPTER \\d", moby.actual)
+moby.actual[moby.chap.positions]
+
+moby.last.position <- length(moby.actual)
+moby.chap.positions <- c(moby.chap.positions, moby.last.position)
+moby.actual[moby.chap.positions]
+
+chapters.raw <- list()
+for (i in 1:(length(moby.chap.positions) -1))
+{
+  titleline <- moby.chap.positions[i]
+  title <- moby.actual[titleline]
+  start <- titleline+1
+  end   <- moby.chap.positions[i+1]-1
+  chapter.lines <- moby.actual[start:end]
+  chapter.string <- tolower(paste(chapter.lines, collapse = " "))
+  chapter.string <- gsub(" +", " ", gsub("[[:punct:]]", " ", chapter.string))
+  chapter.words <- unlist(strsplit(chapter.string, "\\W"))
+  chapter.freqs <- table(chapter.words)
+  chapters.raw[[title]] <- chapter.freqs
+}
+
+sum_of_all_word_freqs_chapter1 <- sum(chapters.raw[[1]])
+num_words_in_chapter1 <- length(chapters.raw[[1]])
+mean_word_freq_chapter1 <- sum_of_all_word_freqs_chapter1/num_words_in_chapter1
+another_way_for_this <- mean(chapters.raw[[1]])
+ttr_chapter1 <- (num_words_in_chapter1/sum_of_all_word_freqs_chapter1)*100
+
+means = c()
+for(i in 1:length(chapters.raw))
+{
+ means[i] <- sum(chapters.raw[[i]])/length(chapters.raw[[i]]) 
+}
+
+means <- unlist(means)
+means <- unname(means)
+
+par(mfrow=c(1,2)) 
+plot(means, type="h")
+plot(scale(means), type = "h")
+
+my_square_function <- function(number)
+{
+  number * number
+}
+
+my_square_function(4) #Gives 16
+
+
+hapax <- sapply(chapters.raw, function(x) sum(x == 1)) 
+

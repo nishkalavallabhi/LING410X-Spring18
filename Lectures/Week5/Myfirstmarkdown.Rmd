@@ -1,0 +1,25 @@
+---
+title: "FirstRmarkdown"
+author: "Sowmya Vajjala"
+date: "February 8, 2018"
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+---
+
+I will show how to add 2 numbers in R. I will also show how to plot.
+```{r echo=FALSE}
+a <- 2
+b <- 3
+c <- a+b
+something <- seq(1:10)
+plot(something)
+```
+
+I am repeating the process, with different numbers
+```{r echo=FALSE}
+
+something <- seq(20:100)
+plot(something)
+```

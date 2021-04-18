@@ -1,0 +1,47 @@
+
+source("TextAnalFunctions.R").
+words <- get_words_vector("DollsHouse-Eng.txt")
+get_dispersion_plot(words, "nora") 
+#or whatever word you want. 
+
+
+moby <- scan("mobydick.txt", what = "character", sep = "\n")
+moby.start <- which (moby ==  "CHAPTER 1. Loomings.")
+moby.end <- which (moby == "orphan.")
+moby.actual <- moby[moby.start:moby.end]
+moby.chap.positions <- grep("^CHAPTER \\d", moby.actual)
+moby.actual[moby.chap.positions]
+
+moby.last.position <- length(moby.actual)
+moby.chap.positions <- c(moby.chap.positions, moby.last.position)
+moby.actual[moby.chap.positions]
+
+chapters.raw <- list()
+for (i in 1:(length(moby.chap.positions) -1))
+{
+  titleline <- moby.chap.positions[i]
+  title <- moby.actual[titleline]
+  start <- titleline+1
+  end   <- moby.chap.positions[i+1]-1
+  chapter.lines <- moby.actual[start:end]
+  chapter.string <- tolower(paste(chapter.lines, collapse = " "))
+  chapter.string <- gsub(" +", " ", gsub("[[:punct:]]", " ", chapter.string))
+  chapter.words <- unlist(strsplit(chapter.string, "\\W"))
+  chapter.freqs <- table(chapter.words)
+  chapters.raw[[title]] <- chapter.freqs
+}
+
+
+hapax <- sapply(chapters.raw, function(x) sum(x == 1)) 
+
+hapaxfunction <- function(x)
+{
+  return(sum(x ==1))
+}
+hapax <- sapply(chapters.raw, hapaxfunction)
+
+
+hapax <- sapply(chapters.raw, function(x) sum(x == 1))
+hapax <- unname(hapax)
+lengths <- unname(sapply(chapters.raw, sum)) #What will this have?
+new <- hapax/lengths

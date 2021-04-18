@@ -1,0 +1,119 @@
+\documentclass[11pt,a4paper]{article}
+
+% some more symbols
+\usepackage{textcomp}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{natbib,multicol}
+\bibpunct[, ]{(}{)}{;}{a}{}{,}
+
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{1ex}
+\addtolength{\oddsidemargin}{-7ex}
+\addtolength{\evensidemargin}{-7ex}
+\addtolength{\textwidth}{14ex}
+\addtolength{\topmargin}{-2\baselineskip}
+\addtolength{\textheight}{4\baselineskip}
+
+% Ensure that we see the local urls that are in the bib file:
+%\newcommand{\localurl}[1]{ OSU local copy: \url{file:#1}}
+
+% \begin{htmlonly}
+% \renewcommand{\href}[2]{\htmladdnormallink{#1}{#2}}
+% \end{htmlonly}
+
+%begin{latexonly}
+%\renewcommand{\mylink}[2]{\href{#1}{#2}}
+
+\usepackage{url}
+%\usepackage[colorlinks,citecolor=blue,pdfpagemode=FullScreen]{hyperref}
+
+%\urlstyle{rm}
+%\def\UrlSpecials{\do\~{\mbox{\~{}}}\do_{\_}\do\%{}}
+
+%end{latexonly}
+
+\usepackage[breaklinks,colorlinks,filecolor=blue,linkcolor=blue,urlcolor=blue,citecolor=red]{hyperref}
+
+% for regular paper output:
+%\hypersetup{}
+
+\usepackage{url}
+
+\begin{document}
+
+\begin{center}
+  \textbf{Spring Semester 2017 \\ Iowa State University\\[3ex]
+  {\Large LING 410X - Language as Data}\\[3ex]
+  Course Handbook
+}
+\end{center}
+
+\bigskip
+%\newpage
+\textbf{\large Instructor:}
+  Sowmya Vajjala
+  \begin{itemize}\vspace*{-.4\baselineskip}\itemsep-.4ex
+  \item \textit{Office:} 331 Ross Hall
+  \item \textit{Email:} sowmya@iastate.edu
+\end{itemize}
+
+\textbf{\large Course Objectives:}
+This course aims to introduce students to methods of discovering language patterns in text documents and applying them to solve practical text analysis problems in their disciplines. Data of any form (text, numbers, images etc.) is available in large amounts now like never before. Text is one of the major forms of big data and hence text analysis is in huge demand in the information technology industry now. Apart from the technological applications, it is also useful in various disciplines like business intelligence, sociology, psychology and literature to name a few. For example, key word extraction and sentiment analysis are very useful in Business analytics, authorship detection and stylometric analyses are examples applications for literature, studying mental disorders through patient written samples is gaining prominence in clinical psychology. In this background, this course introduces some commonly used methods to work with textual data. After a brief primer in the fundamentals of linguistics and its role in text analysis, the course will introduce the students to writing  R scripts (as it is easier to do exploratory analysis and visualization in R without learning a lot of programming principles) to perform text analysis and visualize textual data. 
+
+\bigskip\textbf{\large Learning Outcomes}
+After finishing this course, students will know:
+\begin{enumerate}
+\item some common methods for performing automatic text analysis
+\item some real-life applications of text analysis
+\item how to apply these methods to solve text analysis problems in their domain areas
+\item how to visualize textual data using various tools and methods
+\end{enumerate}
+
+\textbf{\large Pre-requisites:}
+Junior Standing. LING 120 is a preferred but not a mandatory pre-requisite. 
+
+\bigskip\textbf{\large Textbooks}
+The primary textbook is: "Text analysis with R for students of literature" by M.J.Jockers. The course will also rely on a wide range of freely accessible online tutorials and videos related to various methods of text analysis. (example: \url{https://github.com/kbenoit/ITAUR-Short}).
+
+\bigskip\textbf{\large Syllabus - topics covered}
+
+\begin{enumerate}
+\item Introduction
+\\ Text analysis, real world applications, usefulness for various disciplines
+%1 week.
+%to text analysis, applications in real world, and some hands on experience with some text analysis tools like google n-gram viewer (1 week)
+\item Introduction to Linguistics and the role of linguistic knowledge in solving text analysis problems, with examples 
+%(1 weeks, NACLO exercises that are relevant? Radev's conceptual topics)
+%Assignment 1 on these two topics: 10 marks.
+\item Installing R and working with it. 
+%Basic exercises, installing libraries etc.
+%Word frequencies etc. (1 week)
+%Assignment 2 - 15 marks.
+\item Corpus preparation: methods to select, process and clean corpora
+%Working with txt, pdf, doc, HTML etc. (2 weeks)
+%Assignment 3 - 15 marks
+\item Keyword and Key-phrase extraction methods 
+%(2 weeks) RKEA R package, KWIC,
+%Lexical variety, 
+%Assignment 4 - 15 marks
+\item Topic modeling and its applications
+% (2 weeks) tm, topicmodels
+%Assignment 5 - 15 marks
+\item text classification methods and their application for sentiment detection 
+%(2 weeks)
+%Assignment 6 - 15 marks
+\item methods of visualizing textual information 
+%(2 weeks) zipfR, wordcloud, stylo
+%Assignment 7 - 15 marks
+%this leaves about 2 weeks of revision?
+\end{enumerate}
+
+
+\end{document}
+
+tm R package
+https://cran.r-project.org/web/views/NaturalLanguageProcessing.html
+http://link.springer.com/book/10.1007/978-3-319-03164-4 - this is the textbook
+

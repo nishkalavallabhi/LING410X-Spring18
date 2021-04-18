@@ -1,0 +1,260 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\author[Sowmya Vajjala]{Instructor: Sowmya Vajjala}
+
+\title[LING 410X]{LING 410X: Language as Data}
+\subtitle{Semester: Spring '18}
+
+\date{1 March 2018}
+
+\institute{Iowa State University, USA}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\begin{frame}\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Outline}
+\begin{itemize}
+\item Sentiment classification with tm - review of last class
+\item Other things you can do with tm library and document term matrix
+\item Practice exercises
+\item Reminder: Assignment 4 due on 10th (I will be traveling after 8th evening for 2-3 days and may not be accessible immediately).
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\center
+\Large Review of last class
+\end{frame}
+
+\begin{frame}
+\frametitle{Steps in text classification}
+\begin{itemize}
+\item  Step 1: We have a classification problem, and a dataset containing examples for that
+\\ movie review sentiment classification: about 250 examples each for positive and negative reviews. \pause
+\item Step 2: Read that data into R 
+\item Step 3: Create a document term matrix (DTM), Also, keep track of what each document's category is \pause
+\item Step 4: Use an existing classification algorithm - give DTM as input. (training)
+\item Step 5: Use the classifier (output of Step 4) on new texts, to check how it is doing (testing) \pause
+\item Step 6: Repeat these two steps until you are happy, changing different settings. Once you are convinced, you can stop, and start actually using it.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Steps 2: Reading the data}
+Because of the way that data is organized, I have to call cleanCorpus function for each folder, and combine them.
+\footnotesize
+\begin{verbatim}
+#Create training corpus
+corpus_train_pos <- cleanCorpus("data/train/pos")
+corpus_train_neg <- cleanCorpus("data/train/neg") 
+corpus_train <- c(corpus_train_pos,corpus_train_neg)
+training_size <- length(corpus_train_pos) + length(corpus_train_neg)
+
+#Create testing corpus
+corpus_test_pos <- cleanCorpus("data/test/pos")
+corpus_test_neg <- cleanCorpus("data/test/neg") 
+corpus_test <- c(corpus_test_pos,corpus_test_neg) 
+
+#Combine both:
+fullcorpus <- c(corpus_train,corpus_test)
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Step 3: Document Term Matrix}
+\footnotesize
+\begin{verbatim}
+dtm_together <- DocumentTermMatrix(fullcorpus)
+dtm_together_df <- as.data.frame.matrix(dtm_together) 
+labels <-  c(rep("positive",length(corpus_train_pos)), 
+             rep("negative",length(corpus_train_neg)),
+             rep("positive",length(corpus_test_pos)),
+             rep("negative",length(corpus_test_neg)))
+dtm_together_df <- cbind(dtm_together_df,labels)
+\end{verbatim}
+Note: In actual real-world situations, you make your DocumentTermMatrix with only training data, not full corpus! In real world,
+you will also typically have more data. 
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Step 4: Building the classifier}
+\footnotesize
+\begin{verbatim}
+max_col <- ncol(dtm_together_df)
+train <- dtm_together_df[1:training_size,1:max_col-1] 
+#last column is the category
+class_train <- dtm_together_df[1:training_size,max_col]
+
+test <- dtm_together_df[training_size:length(fullcorpus),1:max_col-1]
+class_test <- dtm_together_df[training_size:length(fullcorpus),max_col]
+
+model.svm <- svm(train, class_train)
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Step 5(a): Checking if the classifier is good}
+\begin{itemize}
+\item predict with the svm function as in the textbook.
+\footnotesize
+\begin{verbatim}
+final.result <- predict(model.svm, test)
+
+#compare predictions with actual values:
+predictions <- cbind(as.data.frame(final.result), class_test)
+predictions
+
+#evalute how good this classifier is:
+table(final.result, class_test)
+\end{verbatim}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Step 5(b): Trying to improve by Removing sparse terms}
+\scriptsize
+\begin{verbatim}
+#original dtm
+dtm_together <- DocumentTermMatrix(fullcorpus)
+
+#dtm after removing sparse terms
+dtm_together_2 <- removeSparseTerms(DocumentTermMatrix(fullcorpus), sparse=0.7)
+#this removes 70% of the sparse terms. So, number of columns in dtm is also
+#drastically reduced!
+
+#inspect() function in tm is useful to see the differences:
+inspect(dtm_together)
+inspect(dtm_together_2)
+\end{verbatim}
+\end{frame}
+
+\begin{frame}
+\frametitle{Step 5(b): Trying to improve by Increasing training data}
+\begin{itemize}
+\item I have a larger version of the  data set with more examples (around 1000 examples per category)
+\item We can repeat this process, just changing the corpus folders in the beginning.
+\item The actual dataset has around 12000 examples per category. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\center
+\Large
+Other uses with TM
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Some useful functions in tm to explore the data-1}
+\footnotesize
+\begin{verbatim}
+#Inspecting corpus:
+inspect((corpus_train[16]))
+#Just to know what is in the document. 
+
+#remove your own stopwords.
+docs <- tm_map(docs, removeWords, c("word1", "word2"))
+#word1, word2 will be removed from your corpus
+
+#Get the dimensions (rows,columns) of a document term matrix:
+dim(dtm_together)
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Some useful functions in tm to explore the data-2}
+\footnotesize
+\begin{verbatim}
+inspect(dtm_together[1:5, 1000:1005])
+#Inspect a document term matrix called dtm, 
+#giving the dimensions we want to see.
+
+#Removing sparse terms:
+dtm <- removeSparseTerms(dtm, 0.9)
+inspect(dtm_together)
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{some new R functions}
+\begin{verbatim}
+m <- matrix(sample.int(100),5,5)
+rowSums(m)
+colSums(m)
+rowMeans(m)
+colMeans(m)
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Some useful functions in tm to explore the data-3}
+\footnotesize
+\begin{verbatim}
+#Getting word frequencies for entire collection (not one document)
+freq <- colSums(as.matrix(dtm_together))
+freq <- sort(colSums(as.matrix(dtm_together)), decreasing=TRUE)
+
+#10 most frequent words in the corpus
+freq[1:10]
+
+#Most frequent words in a range in the corpus
+findFreqTerms(dtm_together, lowfreq=100, highfreq=500)
+
+#Finding correlations between words
+findAssocs(dtm_together, "good", corlimit = 0.3)
+\end{verbatim}
+\end{frame}
+
+\begin{frame}
+\center
+\Large Practice exercises
+\end{frame}
+
+\begin{frame}
+\frametitle{Working with text classification}
+\begin{itemize}
+\item install the following packages: tm, SnowballC, e1071 in RStudio
+\item Download dataset.zip, largedataset.zip from Canvas, and the ClassificationWithTM.R file.
+\item Create a folder with today's date in Downloads and copy all these into that.
+\item Unzip both the zip files.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Exercise-1}
+Follow ClassificationWithTM.R file line by line, make changes where necessary, and do the following: \bigskip \\
+Get a document term matrix, perhaps only for training data (i.e., only the train folder), and look for size of the the matrix, frequent words, correlated words etc.
+\end{frame}
+
+\begin{frame}
+\frametitle{Exercise-2}
+In ClassificationWithTM.R , explore various sparsity thresholds, read tm documentation for other options, or add more examples to training data (largerdataset zip file). Check which of those changes you make gives you the best predictions for the test data. \bigskip \\ note: Best prediction is that where diagonals in the last table() output have maximum counts.
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Post on Forum}
+Post about what you learnt today in the discussion forum for today's date.
+\end{frame}
+
+\begin{frame}
+\frametitle{Next Week}
+\begin{itemize}
+\item General review
+\item Final project descriptions and discussion
+\item Time to work on A4 in the class
+\item Mid term feedback
+\item To do for you: Take a look at uploaded project descriptions, think about your ideas, whether you want to work with someone else (2 people max, per team) etc.
+\end{itemize}
+\end{frame}
+
+\end{document}
+
+

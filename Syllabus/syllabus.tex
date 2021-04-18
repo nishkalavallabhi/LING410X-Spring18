@@ -1,0 +1,315 @@
+\documentclass[11pt,a4paper]{article}
+
+% some more symbols
+\usepackage{textcomp}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{natbib,multicol}
+\bibpunct[, ]{(}{)}{;}{a}{}{,}
+
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{1ex}
+\addtolength{\oddsidemargin}{-7ex}
+\addtolength{\evensidemargin}{-7ex}
+\addtolength{\textwidth}{14ex}
+\addtolength{\topmargin}{-2\baselineskip}
+\addtolength{\textheight}{4\baselineskip}
+
+% Ensure that we see the local urls that are in the bib file:
+%\newcommand{\localurl}[1]{ OSU local copy: \url{file:#1}}
+
+% \begin{htmlonly}
+% \renewcommand{\href}[2]{\htmladdnormallink{#1}{#2}}
+% \end{htmlonly}
+
+%begin{latexonly}
+%\renewcommand{\mylink}[2]{\href{#1}{#2}}
+
+\usepackage{url}
+%\usepackage[colorlinks,citecolor=blue,pdfpagemode=FullScreen]{hyperref}
+
+%\urlstyle{rm}
+%\def\UrlSpecials{\do\~{\mbox{\~{}}}\do_{\_}\do\%{}}
+
+%end{latexonly}
+
+\usepackage[breaklinks,colorlinks,filecolor=blue,linkcolor=blue,urlcolor=blue,citecolor=red]{hyperref}
+
+% for regular paper output:
+%\hypersetup{}
+
+\usepackage{url}
+
+\begin{document}
+
+\begin{center}
+  \textbf{Spring Semester 2018 \\ Iowa State University\\[3ex]
+  {\Large LING 410X - Language as Data}\\[3ex]
+  Course Handbook
+}
+\end{center}
+
+\bigskip
+%\newpage
+\textbf{\large Instructor:}
+  Sowmya Vajjala
+  \begin{itemize}\vspace*{-.4\baselineskip}\itemsep-.4ex
+  \item \textit{Office:} 331 Ross Hall
+  \item \textit{Email:} sowmya@iastate.edu
+\end{itemize}
+
+\textbf{\large Course Objectives:}
+This course aims to introduce students to methods of discovering language patterns in text documents and applying them to solve practical text analysis problems in their disciplines. Data of any form (text, numbers, images etc.) is available in large amounts now like never before. Text is one of the major forms of big data and hence text analysis is in huge demand in the information technology industry now. Apart from the technological applications, it is also useful in various disciplines like linguistics, sociology, psychology, e-commerce/business analytics and literature to name a few. For example, key word extraction and sentiment analysis are very useful in Business analytics. Authorship detection and stylometric analyses are examples applications for literature. Studying language variation on social media is an example for Linguistics. Studying mental disorders through patient written samples is gaining prominence in clinical psychology. In this background, this course introduces some commonly used methods to work with textual data. The course will accomplish this goal by teaching students how to write programs in R (as it is easier to do exploratory analysis and visualization in R without learning a lot of programming principles) to perform text analysis and visualize textual data. 
+
+\bigskip\textbf{\large Learning Outcomes}
+After finishing this course, students will know:
+\begin{enumerate}
+\item some common methods for performing automatic text analysis
+\item some real-life applications of text analysis
+\item how to apply these methods to solve text analysis problems in their domain areas
+\item how to visualize textual data using various tools and methods
+\end{enumerate}
+
+\textbf{\large Pre-requisites:}
+Junior Standing. LING 120 is a preferred but not a mandatory pre-requisite.
+
+\bigskip
+
+\textbf{\large Course Details:}
+\begin{itemize}
+\item on Tuesdays and Thursdays from 9:30 -- 10:50 am
+\item Meets in Curtiss 0225 on Tuesdays, and Ross 0137 (Lab) on Thursdays. Note that the Thursday classroom is different from what is put up on class scheduler. 
+\item \textit{Office hours:} Tuesdays and Thursdays, 11-12 noon (please email beforehand if there are specific issues to discuss. If anyone cannot make it during these hours, send me an email to fix an appointment.)
+\end{itemize}
+\textbf{\large Credits:} 
+\begin{itemize}\vspace*{-.8\baselineskip}\itemsep0ex
+\item Credit Points: 3
+\\ (Expect to spend 5-6 hours per week outside the class to work on the problems and assignments.)
+\end{itemize}
+
+\bigskip \textbf{Nature of the course and expectations:} Primary mode of instruction is by lectures and hands-on lab sessions. The course will have regular assignments that deal with various methods of corpora creation and text analysis using software tools, and a final project. The corpora and resources used in this course will address the methods to solve various text analysis related to the student's discipline.
+
+Students enrolled in the course are expected to:
+\begin{enumerate}
+\item work hard, and prepare well for the classes 
+\item regularly and actively participate in class (5\% of the grade)
+\item submit the assignments on time (70\%)
+\item work on a group project and present about it in the class (25\% of the grade)
+\end{enumerate}
+
+\bigskip\textbf{\large Grading Policy}
+There are 6 Assignments in this course covering 70\% of your final grade, and a final project carrying 25 marks (which involves visualizing textual data). The remaining 5\% is for classroom participation, answering questions posted on discussion board, and attendance. Plus/minus grading will be used (93\% = A, 90\% = A-, 87\% = B+, 83\% = B, 80\% = B-, etc.).
+
+The following are the scheduled deadlines for this class: %TENTATIVE DATES
+\begin{itemize}
+\item Assignment 1: 27 January (10\%)
+\item Assignment 2: 10 February (10\%)
+\item Assignment 3: 24 February (10\%)
+\item Assignment 4: 10 March (15\%)
+\item Assignment 5: 31 March (15\%)
+\item Assignment 6: 14 April (10\%)
+\item Group project: (25\% total)
+\begin{itemize}
+\item Initial report due: 7 April (5\%)
+\item Project presentation: 24th, 26th April (5\%)
+\item Project report, and code submission: Finals week, 3rd May midnight (15\%)
+\end{itemize}
+\item Classroom participation (5\%) -every class. 
+\end{itemize}
+
+\bigskip\textbf{\large Attendance Policy}
+Attendance will be in the form of participation in the class or posting in the discussion forum for that day about the questions asked. Anyone who misses more than 4 classes will lose one grade point in their final (A becomes A-, A- becomes B and so on). Anyone who misses 6 classes or more will lose 2 grade points, and Anyone who misses 8 classes or more will get an F. If you cannot be physically present in the class on a given day, you can answer the forum question for that day and get attendance.
+
+\bigskip\textbf{\large Class etiquette:} Please do not read or work on materials for other classes in this class. Come to class on time and do not pack up early. Electronic devices like mobile phones, tablets etc should not be used in the class. Laptops should not be open in class unless there is a concrete, assigned activity. If for some reason, you must leave early or you have an important call coming in, or you have to miss class for an important reason, please let me know (via email) and get it approved \emph{before} the class. Being absent from the class does not allow you to skip submitting any assignments that were assigned in that class.
+
+\bigskip\textbf{\large Academic Conduct}: Generally, you are encouraged to work in groups, discuss, and exchange ideas. At the same time, you are expected to do your assignments by yourself and with honesty. For the text you write, you always have to provide explicit references for any ideas or passages you reuse from somewhere else. Note that this includes text taken from the web. You should cite the url of the web site in case no more official publication is available. Specifically, the class will follow the University policy on academic dishonesty. Anyone suspected of academic dishonesty will be reported to the Dean of Students Office: http://www.dso.iastate.edu/ja/academic/misconduct.html
+
+\bigskip\textbf{\large Disability Accommodation}
+Iowa State University complies with the Americans with Disabilities Act and Sect 504 of the Rehabilitation Act. If you have a disability and anticipate needing accommodations in this course, please contact (instructor name) to set up a meeting within the first two weeks of the semester or as soon as you become aware of your need.  Before meeting with (instructor name), you will need to obtain a SAAR form with recommendations for accommodations from the Student Disability Resources, located in Room 1076 on the main floor of the Student Services Building. Their telephone number is 515-294-7220 or email disabilityresources@iastate.edu .  Retroactive requests for accommodations will not be honored.
+
+\bigskip\textbf{\large Harassment and Discrimination}
+Iowa State University strives to maintain our campus as a place of work and study for faculty, staff, and students that is free of all forms of prohibited discrimination and harassment based upon race, ethnicity, sex (including sexual assault), pregnancy, color, religion, national origin, physical or mental disability, age, marital status, sexual orientation, gender identity, genetic information, or status as a U.S. veteran. Any student who has concerns about such behavior should contact his/her instructor, Student Assistance at 515-294-1020 or email dso-sas@iastate.edu, or the Office of Equal Opportunity and Compliance at 515-294-7612.
+
+\bigskip\textbf{\large Dead Week Policy}
+This class follows the Iowa State University Dead Week policy as noted in section 10.6.4 of the Faculty Handbook: \url{http://www.provost.iastate.edu/resources/faculty-handbook}
+
+\bigskip\textbf{\large Textbooks}
+The primary textbook is: "Text analysis with R for students of literature" by M.J.Jockers and you are not obligated to buy it. The course will also rely on a wide range of freely accessible online tutorials and videos related to various methods of text analysis. (example: \url{https://github.com/kbenoit/ITAUR-Short}).
+
+\bigskip \bigskip \textbf{\large Syllabus - topics covered}
+
+\begin{enumerate}
+\item Introduction
+\\ Text analysis - real world applications, usefulness for various disciplines 
+%1 week.
+%to text analysis, applications in real world, and some hands on experience with some text analysis tools like google n-gram viewer (1 week)
+%(1 weeks, NACLO exercises that are relevant? Radev's conceptual topics)
+\\ Installing R and working with it.  %($~$ 0.5 week)
+%Basic exercises, installing libraries etc.
+%Word frequencies etc. (1 week)
+%Assignment 1 on these two topics: 10 marks.
+\item Corpus preparation: methods to select, process and clean corpora  %($~$ 2 weeks)
+%Working with txt, pdf, doc, HTML etc. (2 weeks)
+%Assignment 2 - 10 marks 
+\item Keyword and Key-phrase extraction methods % ($~$ 2 weeks)
+%(2 weeks) RKEA R package, KWIC,
+%Lexical variety, 
+%Assignment 3 - 15 marks
+\item Text classification methods and application for sentiment detection %($~$ 2 weeks)
+%(2 weeks)
+%Assignment 4 - 15 marks
+\item Topic modeling and its applications  %($~$ 2 weeks)
+% (2 weeks) tm, topicmodels
+%Assignment 5 - 15 marks
+\item Methods of visualizing textual information %($~$ 2 weeks)
+%Assignment 6 - 10 marks
+%(2 weeks) zipfR, wordcloud, stylo
+%this leaves about 2 weeks of revision?
+\end{enumerate}
+
+\bigskip\textbf{\large Scheduling and Deadlines (tentative)}
+Note that the following session plan is subject to change; it only
+constitutes the current state of our planning as the semester unfolds.
+
+%NOTE: Lab on thursdays.
+ \begin{enumerate}\itemsep0ex
+
+\item Tuesday, January 9: Introduction to the course, expectations etc. 
+%Intro to linguistics - a NALCO exercise
+
+\item Thursday, January 11: R set up, basics practice (lab)
+%A1 assigned, on coming up applications relevant to them, R basics. (1-5 lessons in Swirl atleast)
+
+\item Tuesday, January 16: 
+
+\item Thursday, January 18:  R practice lab
+\\ \textbf{A1 assigned. Due on 27th January}
+%Overview of Linguistics and its relevance to discipline specific problems related to text processing
+%what level of linguistic analysis is needed for what kind of problems. 
+%Some group activity?
+%talk about tidytext, tm, 
+%talk about open dataset packages
+%corpus cleaning, vocabulary analysis etc. overview. (6-10 in swirl), intro to some text processing libraries.
+%practice with basic numeric stuff (seq, etc). introducing how to work with text.
+%20min me talking. Rest of the class: exercises? Encourage them to work in groups.
+
+\item Tuesday, January 23: Corpus preprocessing and cleaning - Introduction and issues involved
+%Talk about different formats: txt html pdf xml json etc etc
+%A2 assigned. A1 due. A2 on corpus cleaning etc. include tweet scraping etc
+
+\item Thursday, January 25: Corpus cleaning continued (Reading from HTML, PDF, XML, JSON etc.) + Practice. 
+%A2 on tweets, HTML? 
+\\ \textbf{A2 assigned on pre-processing text. Due on 10th February}
+
+\item Tuesday, January 30: Scraping data from Twitter, NYT etc. 
+
+\item Thursday, February 1: corpus cleaning: conclusion + learning to use R Markdown
+
+%Should also talk about writing R functions ourselves etc.
+\item Tuesday, February 6: Introduction to vocabulary analysis. Keywords and Phrases extraction - overview, and applications
+%A3 assigned. Rmarkup submission. 
+\\ \textbf(A3 assigned on vocabulary and phrase analysis. Due on 24th February)
+
+\item Thursday, February 8: KWIC and other such tools: usage, analysis and lab 
+
+\item Tuesday, February 13: Words to Phrases (ngrams etc)
+%stylo etc. Talking about practical uses. 
+
+\item Thursday, February 15: Conclusion of the topic and exercises.
+%talking about ngram based comparisons between texts etc.
+%talking about Delta, Rolling Delta
+%A3 Due.
+
+\item Tuesday, February 20: Text classification overview
+%A4 Assigned.A4 on TC 15 marks 
+\\ \textbf{A4 assigned on text classification. Due on 10th March. 15 marks.}
+
+\item Thursday, February 22: Text classification and R 
+
+\item Tuesday, February 27: Text classification continued
+
+\item Thursday, March 1: Text classification conclusion
+
+\item Tuesday, March 6: Revision of concepts so far. Description of final project ideas
+%A4 due.
+\textbf{Final project descriptions are put up. First report due in 7th April}
+
+\item Thursday, March 8: Revision, Final project ideas discussion and decisions made.
+% 1 page Writeup about your group project and your approach to solving it. Due on 21st march.
+
+\item Tuesday, March 13: Spring break
+
+\item Thursday, March 15: Spring break
+
+\item Tuesday, March 20: Topic Modeling 
+\\ \textbf{A5 assigned on topic modeling. Due on 31 March. 15 marks.}
+%Initial report for final projects due. A5 assigned. 
+
+%basic idea of topic modeling, applications, why is it relevant for humanities.
+%ref to pol. sci. talk last year.
+
+\item Thursday, March 22: Topic Modeling 
+%Explaining how to do.
+
+\item Tuesday, March 27: Topic Modeling 
+%Evaluating topic models: word intrusion, topic intrusion tasks. If possible, do it as a group. 
+
+\item Thursday, March 29: Topic Modeling
+%wrapping up and evaluation exercise as group
+%A5 due. 
+
+\item Tuesday, April 3: Visualizing textual data %A6 on visualization assigned. 
+\\ \textbf{A6 assigned on Visualization. Due on 14th April. 10 marks.}
+
+\item Thursday, April 5: Visualizing textual data
+
+\item Tuesday, April 10: Visualizing textual data
+
+\item Thursday, April 12: Visualizing textual data
+
+\item Tuesday, April 17: Conclusion and revision
+
+\item Thursday, April 19: Conclusion and revision. Group exercises on exploring domain specific problems and solving them.
+%PLAN FOR THESE THINGS!!!
+
+\item Tuesday, April 24: Group project presentations
+
+\item Thursday, April 26: Group project presentations
+
+\item May 3: FINAL SUBMISSIONS DUE
+
+\end{enumerate}
+\end{document}
+
+tm R package
+https://cran.r-project.org/web/views/NaturalLanguageProcessing.html
+http://link.springer.com/book/10.1007/978-3-319-03164-4 - this is the textbook
+
+quanteda R package
+
+A1--A3: 10 each (30) 
+A4--A6: 15 each (45)
+Project: 25 (Initial report-5, Code-15 marks, 5 oral exam) - some project ideas can involve scraping twitter, NYT etc and doing some text analysis. 
+
+http://tidytextmining.com/
+http://journal.code4lib.org/articles/11626
+
+tm
+
+
+Useful text APIs
+R packages already exist for many open data APIs. If an R package already exists for an API, you can use functions from that package directly, rather than writing your own code using the API protocols and httr functions. Other examples of existing R packages to interact with open data APIs include:
+
+    twitteR: Twitter
+    rnoaa: National Oceanic and Atmospheric Administration
+    Quandl: Quandl (financial data)
+    RGoogleAnalytics: Google Analytics
+    censusr, acs: United States Census
+    WDI, wbstats: World Bank
+    GuardianR, rdian: The Guardian Media Group
+    blsAPI: Bureau of Labor Statistics
+    rtimes: New York Times
+    dataRetrieval, waterData: United States Geological Survey
+
+

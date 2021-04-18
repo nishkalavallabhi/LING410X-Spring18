@@ -1,0 +1,47 @@
+days <- c("Monday", "Tuesday")
+days <- c("Sunday", days)
+days <- c(days,"Wednesday")
+days
+
+v1 <- c("This", "is", "a", "small", "example")
+ v2 <- c("is", "a")
+ v3 <- setdiff(v1,v2)
+
+new <- vector()
+for(day in days)
+{
+ new <- c(new,nchar(day))
+}
+new
+
+file.names <- dir("/Users/sowmya/Desktop")
+for (f in file.names) {
+print(f)
+} 
+
+file.names <- dir(getwd(), pattern ="\\.txt")
+for (f in file.names) {
+print(f)
+} 
+
+
+setwd("my path to the required folder")
+file.names <- dir(getwd(), pattern ="\\.txt")
+file.names
+data <- vector()
+for (f in file.names) {
+  tempData <- scan(f, what="character", sep="\n")
+  tempDataString <- tolower(paste(tempData, collapse = " "))
+  data <- c(data,tempDataString)
+} 
+
+length(data)
+data[1]
+nchar(data[1])
+nchar(data)
+for(item in data)
+{
+  words <- strsplit(item, "\\W+")
+  sorted_freqs <- sort(table(words), decreasing = TRUE)
+  print(sorted_freqs[1:10])
+}

@@ -1,0 +1,409 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\author[Sowmya Vajjala]{Instructor: Sowmya Vajjala}
+
+\title[LING 410X]{LING 410X: Language as Data}
+\subtitle{Semester: Spring '18}
+
+\date{30 January 2018}
+
+\institute{Iowa State University, USA}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\begin{frame}\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Class Outline}
+\begin{enumerate}
+\item Quick recap of last week
+\item Assignment 1 Discussion
+\item Some new functions 
+\item R library to work with NYT data
+\item Assigment 2 description
+\item Quick note on using twitter data
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\Large Recap of last week
+\end{frame}
+
+\begin{frame}
+\frametitle{Topics}
+\begin{enumerate}
+\item Working with file formats (.txt., .docx, .pdf, .html, .xml)
+\item Reading all files (or files that match a pattern such as "ending in .txt") in a folder
+\item Storing .R files
+\item New R stuff we learnt:
+\begin{itemize}
+\item libraries: pdftools, qdapTools, XML
+\item functions: setdiff(), dir()
+\item others: Writing a for loop, adding new items to an existing vector
+\end{itemize}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{Solution to last class' exercise}
+\begin{itemize}
+\item What happens if we remove lower casing, don't remove punctuations, and just split by whitespace, and then look for 10 most frequent words?
+\item How do we remove lower casing? - remove tolower() function call.
+\item How do we split on whitespace? - instead of splitting with "\textbackslash \textbackslash W+", just split using " " (space). \pause
+\item What happens as a result? \pause
+\item Punctuations remain. Case differences remain. So - being; Being; being,; being. - all will be considered different. Your word frequency list changes accordingly!
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\Large Assignment 1 discussion
+\end{frame}
+
+\begin{frame}
+\frametitle{Question 1: Journalism and Mass communication; Business; Sociology}
+\begin{itemize}
+\item Working with large amounts of public information, and performing content analysis efficiently
+\item Analyzing social media to identify trends 
+\item Identify consumer reactions on social media (by companies)
+\item Choosing the right message strategy to reach consumers (what kind of messages about products, how to send? etc)
+\item Crisis management: spreading information about disasters etc 
+\item Negative vs positive news identification
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Question 1:  Linguistics}
+\begin{itemize}
+\item Approximate translation in a large scale
+\item Identifying function vs content words in text, how many words for each category etc 
+\item study language development 
+\item create vocabulary lists
+\item automatic writing evaluation
+\item study language variation
+\item in tools such as alexa, siri etc
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Question 1: Literature}
+\begin{itemize}
+\item Analyze overuse or underuse of words by authors
+\item identifying patterns of speech used in greeting people
+\item quick editing/proofreading of documents
+\item how many times a character is mentioned
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Question 2: Solutions}
+\scriptsize
+\begin{verbatim}
+> cyclones <- "that string I gave in quotes"
+> nchar(cyclones)
+> cyclones_upper <- toupper(cyclones)
+> gsub("(\\d{2}\\.\\d{1})","NUM", cyclones) 
+(or, to be elaborate: )
+> gsub("(\\D\\d{2}\\.\\d{1}\\D)","NUM", cyclones)
+(but, this second expression also substitutes parantheses before numbers)
+> strsplit(cyclones, ".", fixed = TRUE) or strsplit(cyclones, "\\.")
+(what does fixed=TRUE do?)
+> str_to_title(cyclones)
+\end{verbatim}
+\end{frame}
+
+\begin{frame}
+\frametitle{General Comments on Assignment 1}
+\begin{itemize}
+\item Submit in the format I asked for in the Assignment description.
+\item Read any supporting materials provided carefully - I won't ask you to do anything that you will not be able to do at that point in course work.
+\item I ask for Zip files, so that I can download one file for person (programs cannot be evaluated on canvas in browser!
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\Large Some new stuff about R vectors, and lists
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Vectors and Lists}
+\begin{itemize}
+\item Vectors: a collection of objects of same kind (numbers, characters, logical values etc)
+\scriptsize
+\begin{verbatim}
+> vector1 <- c(1,2,3,4)
+> vector2 <- c("English", "German", "French", "Italian", "Chinese")
+> vector3 <- c(TRUE, FALSE, FALSE, TRUE)
+\end{verbatim} \small
+... and so on
+\item Lists: collection of objects of different kind. \scriptsize
+\begin{verbatim}
+> list1 <- list(1,"a",TRUE,4)
+(This list has two numbers, one string and a boolean value)
+> list2 <- list(1,"a",c(1,2,3),4)
+> list3 <- list(1,"a",list(1,2,3),4)
+\end{verbatim}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{More examples of vectors and lists}
+We can also have named lists and vectors like this:
+\footnotesize
+\begin{verbatim}
+list4 <- list(first="Sowmya", course=410, office=331, address="Ross")
+vector4 <- c(first="Sowmya", course=410, office=331, address="Ross")
+(R coerces numbers into strings in above vector1)
+names(list4); names(vector4) gives you - 
+name, course, office, address
+\end{verbatim}
+\end{frame}
+
+\begin{frame}
+\frametitle{accessing individual elements of vectors and lists}
+\begin{itemize}
+\item if I have vector4 $<-$ c(1,4,7,15), vector4$\lbrack 1 \rbrack$ gives me 1,  vector4$\lbrack 2 \rbrack$ gives me 4 and so on. \pause
+\item The way you access elements of a list is slightly different from this in R. It is just the syntax of that language - nothing very logical about it.
+\item Let us take the list from previous slide:
+\item list4 $<-$ list(name="Sowmya", courseNum=410, office=331, address="Ross")
+\item To access the first element in this, I use $\lbrack \lbrack  \rbrack \rbrack$ instead of $\lbrack \rbrack$.
+\item list4$  \lbrack \lbrack$"name"$\rbrack \rbrack$ or list4$  \lbrack \lbrack 1\rbrack \rbrack$ will give me "Sowmya". \pause
+\item list4$ \lbrack 1\rbrack $ will give me: \\ \$name \\
+$\lbrack 1\rbrack "Sowmya"$
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{How do we know whether something is a list or vector}
+Apart from visual inspection, is.vector(some\_variable), is.list(some\_variable) are two functions we can use to find out whether something is a vector or a list.
+\end{frame}
+
+\begin{frame}
+\frametitle{Two more}
+\begin{itemize}
+\item write.csv(some\_variable, "filename.csv") - creates a comma separated value file (which can be read as a spreadsheet)
+\item data.frame(col1,col2) - takes two vectors col1, col2 (equal length) and puts them into a table like format, as two columns (we can put any number of columns we want)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\Large working with R libraries: Example with NYT
+\end{frame}
+
+\begin{frame}
+\frametitle{R libraries for specific data collections}
+\begin{itemize}
+\item There are custom R libraries for specific data collections (such as NYT, Guardian, Gutenberg, Wikipedia etc) \pause
+\item We can always access those websites as if they are any other website, use XML library and work with HTML format.
+\item However, these libraries make our job easier by providing some custom functions to access data from these websites. \pause
+\item I am taking NYT as an example. Your Assignment 2 will require you to use Guardian library. 
+\item We cannot exhaustively do for all websites in internet world. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\Large Analyzing NYT data - example
+\normalsize
+\\ needs: rtimes package
+\\ needs: NY Times "key" \\ \small \url{http://developer.nytimes.com/apps/register}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Example Usage}
+%##c67c9de54f894135ac568dda4f7679ee
+\tiny
+\begin{verbatim}
+library(rtimes)
+Sys.setenv(NYTIMES_AS_KEY = "THE KEY YOU GET AFTER REGISTERING ") 
+res1 <- as_search(q="artificial intelligence", begin_date = "20081001", end_date = "20081201")
+res2 <- as_search(q="artificial intelligence", begin_date = "20180101", end_date = "20180120")
+res3 <- as_search(q = "money", fq = 'news_desk:("Sports" "Foreign")') #search within categories
+res4 <- as_search("iowa caucus")
+names(res1)
+\end{verbatim}
+\normalsize
+References:
+\begin{itemize}
+\item \url{https://cran.r-project.org/web/packages/rtimes/vignettes/rtimes_vignette.html}
+\item \url{https://cran.r-project.org/web/packages/rtimes/rtimes.pdf}
+\item I am following their guidelines for date formats, query format etc.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{How does the output look like?}
+\begin{itemize}
+\item seems like a big list. 
+\item res1\textdollar data\textdollar snippet - gives me snippets for retrieved news items from 2008.
+\item  res2\$data\$snippet - gives me snippets for retrieved news items from 2008.
+\item These seem to be vectors. is\_vector(res1\$data\$snippet) gives TRUE.
+\item We can do other stuff we did before with this. Example: \tiny
+\begin{verbatim}
+> snippets_2008 <-  res1$data$snippet
+> for (snippet in snippets_2008) {
+   print(tolower(snippet))
+}
+We can also write specific columns into a new file
+> df <- data.frame(res1$data$snippet,res1$data$pub_date)
+> write.csv(df,"temp.csv")
+\end{verbatim} \small
+\item We can do analyses such as: what are people talking about in 2008 vs 2018 on AI etc.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Things to keep in mind when working with such libraries}
+\begin{itemize}
+\item Always check the documentation for how to use different functions, what values they return to you etc.
+\item Some libraries change formats between versions: so the same code may not work 5 years later, if your library is updated
+\item It will work ofcourse, if you did not update your R version, R libraries etc. 
+\item Example: I talked about the same NYT library last year too, but results (same information) was shown in a different format (not as a list). 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\Large Assignment 2 Description
+\end{frame}
+
+\begin{frame}
+\frametitle{Assignment 2}
+\begin{enumerate}
+\item 2 Questions, 10\% of your grade in total (5\% for each question)
+\item Deadline: 10th February 2018
+\item First question: Very easy, but you should learn to use something I did not discuss in class (use ?readLines and figure out!)
+\item Second question: Use GuardianR library (not NYTimes) and answer few questions. You should look at the GuardianR package documentation on R website and understand how to use it.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\Large working with Twitter: Quick introduction
+\\ \scriptsize ( Note: I will not do this in the class, as not everyone wants a twitter account. But I strongly encourage you to learn to scrape data from twitter atleast during your course projects. I can do an additional tutorial session for those who are interested, perhaps in the week after spring break.)
+
+\end{frame}
+
+\begin{frame}
+\frametitle{why care about twitter?}
+\begin{itemize}
+\item Twitter (and other such social media) is widely used these days.
+\item Millions of people tweet every day.
+\item This includes government agencies and people who run the country.
+\item This means social media is a useful source to analyze current trends and thoughts
+\item Tweets are textual data too! lot of it!
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{What can we study on Twitter}
+\begin{itemize}
+\item how information spreads across geographical locations
+\item how are people reacting to the release of the new iphone version?
+\item what is white house communicating with its citizens and foreigners?
+\item What are the political views of a person?
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Twitter in R}
+\begin{itemize}
+\item twitteR and streamR libraries are commonly used.
+\item twitteR is more about doing search for keywords, hashtags, users, followers.
+\item streamR will also do location based sorting of tweets, you can access tweets in real time (as they get tweeted, almost) etc.
+\item There are also such APIs for facebook, instagram etc, if you want to explore.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{What do you need before starting to work?}
+\begin{itemize}
+\item a twitter account (it asks for your phone number - this is why I am not making it mandatory)
+\item Through twitter account: API Key, API secret; access token, access token secret
+\item install required libraries as needed: ROAuth, twitteR, streamR, rTweet, tweetscores etc
+\item Use existing documentation: e.g., you can look at the documentation for twitteR and understand what you can do with it. 
+\\ \url{https://cran.r-project.org/web/packages/twitteR/twitteR.pdf}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Free course materials online on using Twitter data in R}
+\begin{itemize}
+\item New York university has a 3 day crash course on "Data Science and Social Science".
+\item Their materials are online: \url{https://github.com/pablobarbera/data-science-workshop}
+\item All their course slides and R code are free! So, you can take a look if you want to work with some social media data for course projects! \pause
+\item A workshop: "Collecting and Analyzing Social Media data with R" happened last week, and all its materials are also free and publicly shared! \\ \url{https://github.com/pablobarbera/social-media-workshop}
+\pause
+\item Initial part of this article: (\url{https://goo.gl/ojPsYU}) also gives an overview of what you need to setup twitter and R to work together.
+\item You can look for other online tutorials, but look for recent ones (may be after 2015).
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Next Class}
+\begin{itemize}
+\item Back to corpus analysis, where we left in Week 2.
+\item Read: Chapter 4 in the textbook
+\item If possible: Take a look at the WordFreq.R code from last week, to remind yourself what we did in the past
+\item I posted a question on the forum for today - answer that question before next class
+\end{itemize}
+\end{frame}
+
+\end{document}
+
+Next week: Chapters 5--7 in one class, Chapters 8--9 in another class
+\begin{frame}
+\frametitle{What is a correlation?}
+\begin{itemize}
+\item Let us say I want to know whether two words always appear in same contexts or whether they are in total opposition to each other. \pause
+\item In this "A Doll's house" play, there are several characters - Nora, Nils, Rank, Torvald, Christine etc.
+\item Let us say I observe while plotting dispersions that Nora and Nils never seem to be together in any scene (purely based on the plots. I do not remember the play!!!)
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+\frametitle{Setting up your twitter access from within R}
+\tiny
+\begin{verbatim}
+requestURL <- "https://api.twitter.com/oauth/request_token"
+accessURL <- "https://api.twitter.com/oauth/access_token"
+authURL <- "https://api.twitter.com/oauth/authorize"
+my_key <- "XXXXXX"
+my_secret <- "XXXXXXXX"
+my_oauth <- OAuthFactory$new(consumerKey=my_key, consumerSecret=my_secret, requestURL=requestURL,
+       accessURL=accessURL, authURL=authURL)
+my_oauth$handshake(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl"))
+#This will show a message and direct us to our twitter account and gives  us a PIN once we authorize
+#Type the PIN:XXXXXXXX
+save(my_oauth, file="oauth_token.Rdata")
+#This will store this information on your computer in the folder where you are working now.
+
+accessToken = 'XXX'
+accessSecret = 'XXX'
+
+setup_twitter_oauth(consumer_key=my_key, consumer_secret=my_secret, 
+      access_token=accessToken, access_secret=accessSecret)
+#You are ready to start searching for tweets!
+\end{verbatim}
+source: \url{https://github.com/pablobarbera/social-media-workshop/}
+\end{frame}
+
+\begin{frame}
+\frametitle{Working with Twitter: Quick summary}
+\begin{itemize}
+\item What will you need: 
+\begin{itemize}
+\item A twitter account if you do not have one. You will be asked for your phone number. Don't panic. You can delete such personal details once you are done with the exercise.
+\item Then, go to https://apps.twitter.com/ and choose Create New App. Enter what they ask for (enter something like http://www.xxx.com as the url)
+\item Once the app is created, you can visit the tab "Keys and Access Tokens" where you see a API Key, and a API Secret. 
+\item In that tab, you also see "Create my access token" button. Click it, and it will create two strings - access token and access token secret.
+\end{itemize}
+\item Store all these four numbers somewhere on your laptop, you will need them to work with twitter in R. 
+\end{itemize}
+\end{frame}

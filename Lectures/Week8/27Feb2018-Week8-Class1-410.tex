@@ -1,0 +1,335 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\author[Sowmya Vajjala]{Instructor: Sowmya Vajjala}
+
+\title[LING 410X]{LING 410X: Language as Data}
+\subtitle{Semester: Spring '17}
+
+\date{27 February 2018}
+
+\institute{Iowa State University, USA}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\begin{frame}\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Outline}
+\begin{itemize}
+\item Assignment 3 discussion
+\item Text classification: Example
+\item Assignment 4 description
+\item Note: The discussion forums is how I evaluate active participation (5\% of your grade). So, if you don't post when I ask, essentially, you are telling me "I don't care about that 5\%".
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\Large Assignment 3 discussion \\
+\small (Discussion in a short document)
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\Large Text Classification - how it is done
+\end{frame}
+
+\begin{frame}
+\frametitle{Steps in text classification}
+\begin{itemize}
+\item  Step 1: We have a classification problem, and a dataset containing examples for that
+\\ e.g., spam classification: 100s of examples for spam, and non-spam emails. \pause
+\item Step 2: Read that data into R 
+\item Step 3: Create a document term matrix (DTM), Also, keep track of what each document's category is \pause
+\item Step 4: Use an existing classification algorithm - give DTM as input. (training)
+\item Step 5: Use the classifier (output of Step 4) on new texts, to check how it is doing (testing) \pause
+\item Step 6: Repeat these two steps until you are happy, changing different settings. Once you are convinced, you can stop, and start actually using it.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Sentiment classification - my dataset}
+Movie reviews dataset. 
+source:\url{http://ai.stanford.edu/~amaas/data/sentiment/}
+\end{frame}
+
+\begin{frame}
+\frametitle{tm - library}
+\begin{itemize}
+\item used for doing various text mining tasks in R
+\item can use it for just exploring data, do text classification, topic modeling, clustering, visualization etc.
+\item we will continue using this for the rest of this class.
+\item install.packages("tm")
+\item install.packages("SnowballC")
+\item install.packages("e1071") - to continue with the svm algorithm the author used.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Working with tm: loading files from a directory and pre-processing}
+tm has a lot of built in pre-processing options
+\small
+\begin{verbatim}
+library(tm)
+cleanCorpus <- function(folder)
+{
+  corpus <- VCorpus(DirSource(folder))
+  corpus <- tm_map(corpus, removeNumbers)
+  corpus <- tm_map(corpus, content_transformer(tolower))
+  corpus <- tm_map(corpus, removePunctuation)
+  corpus <- tm_map(corpus, removeWords, stopwords("english"))
+  #corpus <- tm_map(corpus,stemDocument)
+  return(corpus)
+}
+\end{verbatim}
+(there are more)
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Corpus organization}
+\begin{itemize}
+\item This dataset has a folder structure as follows:
+\begin{enumerate}
+\item a folder called train, in which there is a folder called pos, and another called neg.
+\item a folder called test, with same structure as above
+\item the pos and neg folders contain examples of positive reviews and negative reviews. 
+\end{enumerate}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Corpus pre-processing}
+Because of the way that data is organized, I have to call cleanCorpus function for each folder, and combine them.
+\footnotesize
+\begin{verbatim}
+#Create training corpus
+corpus_train_pos <- cleanCorpus("data/train/pos")
+corpus_train_neg <- cleanCorpus("data/train/neg") 
+corpus_train <- c(corpus_train_pos,corpus_train_neg)
+training_size <- length(corpus_train_pos) + length(corpus_train_neg)
+
+#Create testing corpus
+corpus_test_pos <- cleanCorpus("data/test/pos")
+corpus_test_neg <- cleanCorpus("data/test/neg") 
+corpus_test <- c(corpus_test_pos,corpus_test_neg) 
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Building a Document-Term matrix (DTM)}
+\begin{itemize}
+\item Since we here have both training data, and some testing data to validate our work, let us build a DTM combining all data. 
+\end{itemize} \footnotesize
+\begin{verbatim}
+fullcorpus <- c(corpus_train,corpus_test)
+dtm_together <- DocumentTermMatrix(fullcorpus)
+\end{verbatim} \small
+-yes, only one line!! (There are several other possible arguments to this function though).
+\\ Note: In real world, we actually will not see the actual test data until we start using the classifier. So, we don't build a DTM for test data (we cannot!). I am just using this example as illustration. 
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Adding sentiment information to this matrix}
+Once you have this dtm: \small
+\begin{itemize}
+\item Convert the dtm to data frame (because the svm classifier we use wants a data frame. \footnotesize
+\begin{verbatim} 
+dtm_together_df <- as.data.frame.matrix(dtm_together) 
+\end{verbatim} \small
+\item extra column to indicate the sentiment (positive/negative) (Why? Isn't the task that of knowing this?) \pause
+\footnotesize
+\begin{verbatim}
+labels <-  c(rep("positive",length(corpus_train_pos)), 
+             rep("negative",length(corpus_train_neg)),
+             rep("positive",length(corpus_test_pos)),
+             rep("negative",length(corpus_test_neg)))
+dtm_together_df <- cbind(dtm_together_df,labels)
+\end{verbatim}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Building a sentiment classifier}
+\begin{itemize} \small
+\item Split the entire data back into training and testing again (Why?) 
+\scriptsize
+\begin{verbatim}
+max_col <- ncol(dtm_together_df)
+train <- dtm_together_df[1:training_size,1:max_col-1] 
+#last column is the category
+class_train <- dtm_together_df[1:training_size,max_col]
+
+test <- dtm_together_df[training_size:length(fullcorpus),1:max_col-1]
+class_test <- dtm_together_df[training_size:length(fullcorpus),max_col]
+\end{verbatim} \small
+\item use svm() function like in the textbook, to "train" to classify
+\begin{verbatim}
+model.svm <- svm(train, class_train)
+\end{verbatim}
+\end{itemize} \small
+-Yes, the two important parts of text classification (building a DTM, and building a classifier - they are just one liners!
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Using the sentiment classifier}
+\begin{itemize}
+\item predict with the svm function as in the textbook.
+\footnotesize
+\begin{verbatim}
+final.result <- predict(model.svm, test)
+
+#compare predictions with actual values:
+predictions <- cbind(as.data.frame(final.result), class_test)
+predictions
+
+#evalute how good this classifier is:
+table(final.result, class_test)
+\end{verbatim}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{What now?}
+\begin{itemize}
+\item At this point, we have a classifier, which can be used to analyse sentiment of new movie reviews.
+\item However, it also seems to be pretty bad. \pause
+\item How can we improve? - 3 ways, primarily
+\begin{enumerate}
+\item DTM: Should we consider all terms inside a DTM? How about filtering? One intuition: Words that are two infrequent are perhaps not useful.
+\item Classification (1): I used svm. There may be some options within that function, I did not explore
+\item Classification (2): svm is not the only one around, I can look for other classification algorithms in R. 
+\item Increase the number of training examples. 
+\end{enumerate}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Removing sparse terms}
+\scriptsize
+\begin{verbatim}
+#original dtm
+dtm_together <- DocumentTermMatrix(fullcorpus)
+
+#dtm after removing sparse terms
+dtm_together_2 <- removeSparseTerms(DocumentTermMatrix(fullcorpus), sparse=0.7)
+#this removes 70% of the sparse terms. So, number of columns in dtm is also
+#drastically reduced!
+
+#inspect() function in tm is useful to see the differences:
+inspect(dtm_together)
+inspect(dtm_together_2)
+\end{verbatim}
+\end{frame}
+
+\begin{frame}
+\frametitle{Increasing training data}
+\begin{itemize}
+\item I have a larger version of the  data set with more examples (around 1000 examples per category)
+\item We can repeat this process, just changing the corpus folders in the beginning.
+\item The actual dataset has around 12000 examples per category. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Using a different classifier}
+\begin{itemize}
+\item I leave that part for your explorations!
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Worked out example}
+ClassificationWithTM.R on Canvas.
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\Large Assignment 4 description
+\\ \small (check on Canvas)
+\end{frame}
+
+\begin{frame}
+\frametitle{Next Class}
+\begin{itemize}
+\item other corpus analyses tm supports (associations between words etc)
+\item Practicals with tm.
+\item Discussion on the practicals.
+\item TODO: go through the slides, go through the tm vignettes document online, and post your questions and comments on the forum for today!
+\\ \url{https://cran.r-project.org/web/packages/tm/vignettes/tm.pdf}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\Large Discussion about the review document I uploaded last week
+\end{frame}
+
+\end{document}
+
+\begin{frame}[fragile]
+\frametitle{Some useful functions in tm to explore the data-1}
+\footnotesize
+\begin{verbatim}
+#Inspecting corpus:
+inspect((corpus_test[16]))
+
+#Creating a custom transformation:
+toSpace <- content_transformer(function(x, pattern) gsub(pattern, 
+                  " ", x))
+docs <- tm_map(docs, toSpace, "/")
+#This replaces / with space.
+
+#remove your own stopwords.
+docs <- tm_map(docs, removeWords, c("word1", "word2"))
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Some useful functions in tm to explore the data-2}
+\footnotesize
+\begin{verbatim}
+#Get the dimensions of a document term matrix:
+dim(dtms)
+
+inspect(dtm[1:5, 1000:1005])
+#Inspect a document term matrix called dtm, 
+#giving the dimensions we want to see.
+
+#Removing sparse terms:
+dtm <- removeSparseTerms(dtm, 0.9)
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Some useful functions in tm to explore the data-2}
+\begin{verbatim}
+#Getting frequent words, ordering them
+freq <- colSums(as.matrix(dtm_together))
+freq <- sort(colSums(as.matrix(dtm)), decreasing=TRUE)
+freq[head(order(freq, decreasing = TRUE))]
+findFreqTerms(dtm, lowfreq=100)
+
+#Finding correlations between words
+findAssocs(dtm_together, "bad", corlimit = 0.2)
+\end{verbatim}
+\end{frame}
+
+For thursday:
+\begin{frame}
+\frametitle{Exercise-1}
+In Tuesday's code: As mentioned in class, rename carleton1.xml file as anonymous file, remove the original anon.xml (keep it in a different folder or something), and now, repeat the steps in that code. Now, look at how the classifier is doing, and what you can do to improve it.
+\end{frame}
+
+\begin{frame}
+\frametitle{Exercise-2}
+In Today's explore various sparsity thresholds, using different weighting schemes, or adding more examples to training data. Check which of those changes you make gives you the best predictions (best prediction is that where diagonals in the last table() output have maximum counts).
+\end{frame}
+
+\begin{frame}
+\frametitle{Mid-term feedback}
+
+\end{frame}

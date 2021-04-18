@@ -1,0 +1,6 @@
+One of the most important things the legend on a map tells is what scale was used in drawing the map. By scale we mean how much space on the map stands for how much space on the ground or in your house or your room. 
+If you want your map to be accurate, you will have to choose what scale you will use. We say maps are drawn 'to scale,' or, if they are just roughly sketched, 'not to scale.' 
+If you are drawing a map of your room you will chose a different scale from the one you would use if you were going to make a map of the United States or one showing how you would walk to school. 
+For the map of your room you might decide that one inch on your map will stand for one foot in your room. If your room measures 10 feet by 11 feet, your map will be 10 inches by 11 inches. 
+But the United States is 3,000 miles wide. To draw a map of the United States to the scale of one inch equals one mile, you would have to have a piece of paper 3,000 inches long! 
+If you want your map of the United States to fit on a sheet of paper ten inches wide, one inch on your paper will have to stand for 300 miles. 

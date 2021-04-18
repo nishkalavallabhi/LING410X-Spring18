@@ -1,0 +1,94 @@
+#Topic modeling with Mallet
+
+#Requirements: Java needs to be installed on your computer.
+#https://java.com/en/download/help/index_installing.xml
+
+#After that: mallet needs to be installed in Rstudio (which inturn installs rJava)
+#On MacOS, R may also prompt you to install some other some legacy java version - if it does,
+
+makeFlexTextChunks <- function(doc.object, chunk.size=1000, percentage=TRUE){
+  paras <- getNodeSet(doc.object,
+                      "/d:TEI/d:text/d:body//d:p",
+                      c(d = "http://www.tei-c.org/ns/1.0"))
+  words <- paste(sapply(paras,xmlValue), collapse=" ")
+  words.lower <- tolower(words)
+  words.lower <- gsub("[^[:alnum:][:space:]']", " ", words.lower)
+  words.l <- strsplit(words.lower, "\\s+")
+  word.v <- unlist(words.l)
+  x <- seq_along(word.v)
+  if(percentage){
+    max.length <- length(word.v)/chunk.size
+    chunks.l <- split(word.v, ceiling(x/max.length))
+  } else {
+    chunks.l <- split(word.v, ceiling(x/chunk.size))
+    #deal with small chunks at the end
+    if(length(chunks.l[[length(chunks.l)]]) <=
+       length(chunks.l[[length(chunks.l)]])/2){
+      chunks.l[[length(chunks.l)-1]] <-
+        c(chunks.l[[length(chunks.l)-1]],
+          chunks.l[[length(chunks.l)]])
+      chunks.l[[length(chunks.l)]] <- NULL
+    }
+  }
+  chunks.l <- lapply(chunks.l, paste, collapse=" ")
+  chunks.df <- do.call(rbind, chunks.l)
+  return(chunks.df)
+}
+
+library(XML)
+setwd("/Users/sowmya/Dropbox/ClassroomSlides-BothCourses/LING410X/Week11Mats/21Mar2018")
+inputDir <- "data/XMLAuthorCorpus"
+files.v <- dir(path=inputDir, pattern=".*xml")
+chunk.size <- 1000
+
+topic.m <- NULL
+for(i in 1:length(files.v)){
+  doc.object <- xmlTreeParse(file.path(inputDir, files.v[i]),
+                             useInternalNodes=TRUE)
+  chunk.m <- makeFlexTextChunks(doc.object, chunk.size,
+                                percentage=FALSE)
+  textname <- gsub("\\..*","", files.v[i])
+  segments.m <- cbind(paste(textname,
+                            segment=1:nrow(chunk.m), sep="_"), chunk.m)
+  topic.m <- rbind(topic.m, segments.m)
+}
+
+documents <- as.data.frame(topic.m, stringsAsFactors=F)
+colnames(documents) <- c("id", "text")
+
+library(mallet)
+mallet.instances <- mallet.import(documents$id,documents$text,"data/stoplist.csv",FALSE,token.regexp="[\\p{L}']+")
+
+topic.model <- MalletLDA(num.topics=43)
+topic.model$loadDocuments(mallet.instances)
+vocabulary <- topic.model$getVocabulary()
+length(vocabulary)
+head(vocabulary)
+vocabulary[1:50]
+word.freqs <- mallet.word.freqs(topic.model)
+topic.model$setAlphaOptimization(40, 80)
+topic.model$train(400)
+
+topic.words.m <- mallet.topic.words(topic.model,smoothed=TRUE,normalized=TRUE)
+dim(topic.words.m)
+
+rowSums(topic.words.m)
+topic.words.m[1:3, 1:3]
+
+vocabulary <- topic.model$getVocabulary()
+colnames(topic.words.m) <- vocabulary
+topic.words.m[1:3, 1:3]
+
+keywords <- c("california", "ireland")
+topic.words.m[, keywords]
+
+imp.row <- which(rowSums(topic.words.m[, keywords]) ==max(rowSums(topic.words.m[, keywords])))
+
+mallet.top.words(topic.model, topic.words.m[imp.row,], 10)
+
+#Plotting wordcloud for a topic
+library(wordcloud)
+
+#eg: plotting a word cloud for topic 20
+topic.top.words <- mallet.top.words(topic.model,topic.words.m[20,], 100)
+wordcloud(topic.top.words$words,topic.top.words$weights,c(4,.8), rot.per=0, random.order=F)

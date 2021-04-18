@@ -1,0 +1,201 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\author[Sowmya Vajjala]{Instructor: Sowmya Vajjala}
+
+\title[LING 410X]{LING 410X: Language as Data}
+\subtitle{Semester: Spring '18}
+
+\date{25 January 2018}
+
+\institute{Iowa State University, USA}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\begin{frame}\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Class outline}
+\begin{itemize}
+\item Some new R functions
+\item Reading in multiple files from a folder
+%\item Working with New York Times library in R
+\item Storing programs in .R files
+\item Group exercise
+\item Reminder: Submit Assignment 1 on time.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\Large Some new R functions
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Adding more items to an existing vector}
+\begin{verbatim}
+days <- c("Monday", "Tuesday")
+days <- c("Sunday", days)
+days <- c(days,"Wednesday")
+days
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{setdiff function}
+Returns difference between two vectors
+\scriptsize
+\begin{verbatim}
+ v1 <- c("This", "is", "a", "small", "example")
+ v2 <- c("is", "a")
+ v3 <- setdiff(v1,v2)
+\end{verbatim}
+\small
+v3 here will have "This", "small", "example"
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Writing "loops" to repeat tasks}
+\begin{itemize}
+\item Why?: Tasks that need to be performed repetitively
+\item E.g., I want to count 10 most frequent words not for one file, but for all files in a folder. \pause
+\item R syntax for writing such loops - an example:
+\begin{verbatim}
+new <- vector()
+for(day in days)
+{
+ new <- c(new,nchar(day))
+}
+new
+\end{verbatim}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\Large Reading a directory of text files - example
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Iteratively accessing files in a folder-1}
+\tiny
+\begin{verbatim}
+file.names <- dir("/home/bangaru/Desktop")
+#this path is on my computer!!
+for (f in file.names) {
+print(f)
+} 
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Iteratively accessing files in a folder-2}
+\tiny
+\begin{verbatim}
+file.names <- dir(getwd(), pattern ="\\.txt")
+for (f in file.names) {
+print(f)
+} 
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Reading the content of all files}
+\tiny
+\begin{verbatim}
+setwd("my path to the required folder")
+file.names <- dir(getwd(), pattern ="\\.txt")
+file.names
+data <- vector()
+for (f in file.names) {
+  tempData <- scan(f, what="character", sep="\n")
+  tempDataString <- tolower(paste(tempData, collapse = " "))
+  data <- c(data,tempDataString)
+} 
+#What will "data" contain now?
+length(data)
+data[1]
+nchar(data[1])
+nchar(data)
+\end{verbatim}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{continuing from there...}
+Let us see if we can get the 10 most frequent words per book:
+\tiny
+\begin{verbatim}
+for(item in data)
+{
+  words <- strsplit(item, "\\W+")
+  sorted_freqs <- sort(table(words), decreasing = TRUE)
+  print(sorted_freqs[1:10])
+}
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{continuing from there...}
+Let us put everything in one loop: 
+\tiny
+\begin{verbatim}
+setwd("my path to the required folder")
+file.names <- dir(getwd(), pattern ="\\.txt")
+for (f in file.names) {
+  cat("in this file:",f, "\n")
+  tempData <- scan(f, what="character", sep="\n")
+  tempDataString <- tolower(paste(tempData, collapse = " "))
+   words <- strsplit(tempDataString, "\\W+")
+  sorted_freqs <- sort(table(words), decreasing = TRUE)
+  print(sorted_freqs[1:10])
+}
+\end{verbatim}
+\small -here, I did not do the part of reading all data into one larger variable - why? \\
+(I uploaded a file called Directory.R which contains these lines of R code) \\
+Note: There are other ways to do this in R. 
+\end{frame}
+
+\begin{frame}
+\frametitle{storing .R files}
+\begin{itemize}
+\item Why?: Reusability - it wont go away when you close Rstudio.
+\item Please note: On lab computers, it will be erased - so upload to box, google drive or some such storage before you leave.
+\item Using a .R file:
+\begin{itemize}
+\item You can open in the left top panel.
+\item Two options: source, run. Run runs the code on the console, line by line.
+\item Source: file is stored and run internally and you just see the output. \pause
+\item If you write your own R functions in your program, source("filename.R") will also allow other R functions you type in the console to use those from this file.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Exercise}
+\begin{itemize}
+\item Why are we lower casing, and what happens if we just don't remove punctuations, and just split by white space?
+\item What sort of frequency tables will you see? 
+\item How do these pre-processing decisions affect our results and analysis we do of them?
+\item You can work in groups and discuss among yourselves, and post in the discussion forum any code (attach .R files) and comments on the outputs you see. 
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Next Week}
+\begin{itemize}
+\item Continuation and Conclusion of working with different formats (e.g., reading from NYTimes directly from R)
+\item Recommended reading: \url{https://cran.r-project.org/web/packages/rtimes/rtimes.pdf}
+\item Check the first 5-6 pages in this pdf, if possible, try to make it work in R Studio as shown in their example.
+\item Reminder: Submit Assignment 1 \pause
+\item Question: How many of you have Twitter accounts? How many are willing to create one for the class? 
+\item If you are not interested, we won't do it as an exercise - I will just provide a tutorial file for enthusiasts.
+\end{itemize}
+\end{frame}
+
+\end{document}
+
+
+

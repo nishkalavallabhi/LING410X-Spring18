@@ -1,0 +1,203 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\author[Sowmya Vajjala]{Instructor: Sowmya Vajjala}
+
+\title[LING 410X]{LING 410X: Language as Data}
+\subtitle{Semester: Spring '18}
+
+\date{15 February 2018}
+
+\institute{Iowa State University, USA}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\begin{frame}\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Class Outline}
+\begin{itemize}
+\item Announcements etc
+\item Assignment 2 discussion
+\item Discussion on the Technology Review article
+\item Some notes on R syntax
+\item Quick review of KWIC and n-grams
+%\item Anatomy of a HTML page and how to work with it in R
+%\item Discussion questions
+\item Practice exercises.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Extra tutorial session - optional}
+\begin{itemize}
+\item I want to hold an additional session on some evening (preferably thursday or friday) next week (say: 4-6pm) for general discussion and questions.
+\item This is optional and there is no set agenda
+\item The goal is to do some revision, and give additional clarifications on topics some of you are not clear about.
+\item I will book a lab and let you know - you can walk in and join for as long as you want.
+\item I would prefer if questions are sent to me apriori (I will setup a discussion forum)
+\item How many of you will be interested in this? (It is okay if there are only 1 or 2)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\Large Assignment 2 Discussion
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Assignment 2 discussion: Question 1}
+\tiny
+\begin{verbatim}
+htm <- readLines("2446.htm")
+txt <- readLines("2446.txt")
+length(htm) #gives 8139
+length(txt) #gives 5081
+\end{verbatim}
+\normalsize
+Questions:
+\begin{itemize}
+\item Why is the length different? 
+\item Which one of these formats is easy to process forR in your opinion?  Why? 
+\item Which one may give more interesting information?
+\item readline() vs readLines() functions
+\item readLi nes() vs scan() functions
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Assignment 2 discussion: Question 2}
+\tiny
+\begin{verbatim}
+guardian_key <- "XXXXXXX" 
+step 1: results <- get_guardian("justin+trudeau", section= "world", api.key = guardian_key,
+                           to.date = "2018-01-15", from.date = "2018-01-01")
+#section is optional.
+step 2: nrow(results) #gives number of results
+step 3: names(results) #gives column names
+step 3: 
+my_df <- data.frame(results["id"],results["wordcount"])
+#or whichever columns you want
+step 4: copy-paste to spreadsheet, or use a new library to create spreadsheets from R or 
+do this: write.csv(my_df, file = "results.csv")
+- If you double-click this file you created, it usually will open in MS Excel 
+or such software as a spreadsheet.
+\end{verbatim}
+\normalsize
+\pause Oh, btw, I know many of your guardian API keys!!
+\end{frame}
+
+
+\begin{frame}
+\Large Article Discussion
+\end{frame}
+
+\begin{frame}
+\frametitle{Overview}
+\begin{itemize}
+\item What is already known  to the authors: ISIS uses social media, especially Twitter, to spread its ideas. \pause
+\item Their question: What do ISIS and followers/sympathizers talk on twitter? Why (how?) do such messages spread? \pause
+\item Data: about 2 million Arabic language tweets posted by 25K ISIS members over a period of: Jan-June 2015. \pause
+\item Pre-processing: performed tokenization and stemming. Removed non-Arabic tweets. compiled 100 most popular stems. 
+\item Further pre-processing: removed stems that are not related to their analysis. Left with 34 stems. Grouped them into four categories: violence, theological, sectarian, names.\pause
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Analysis}
+\begin{itemize}
+\item Analysis: if a tweet has majority stems from one category, categorize the tweet as that (main point. there is more).
+\item They report on percentage of tweets belonging to different categories
+\item They have plots showing the tweets of different categories over a period of time, and correlating them with news items. 
+\end{itemize}
+Note: I am not going to discuss their conclusions and implications and so on. That is not relevant for our course.
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\centering
+\Large Quick notes on R syntax
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{collapse vs sep in paste function}
+What will be output of all these???
+\footnotesize
+\begin{verbatim}
+paste("1st", "2nd", "3rd", collapse = ", ")
+paste("1st", "2nd", "3rd", sep = ", ")
+paste("1st", "2nd", "3rd", collapse = ", ", sep = ":")
+vec1 <- c("1st", "2nd", "3rd")
+vec2 <- c("4th", "5th", "6th")
+paste(vec1, collapse = ":: ")
+paste(vec1, sep = ":: " )
+paste(vec1, vec2, sep = "::")
+paste(vec1, vec2, sep = "::", collapse = "--")
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Interesting R feature we need to be aware of}
+\begin{verbatim}
+paste(c('v1','v2'),collapes='+')
+paste(c('v1','v2'),whatever='+')
+\end{verbatim}
+-What do you think happens in these two cases? \pause
+
+paste interprets this as this: you want to paste each element of first vector with a variable collapes or whatever. Will not throw an error!!!
+\end{frame}
+
+\begin{frame}
+\Large Tuesday class review
+\end{frame}
+
+\begin{frame}
+\frametitle{Tuesday's class}
+\begin{itemize}
+\item Getting a word's occurrence, in context
+\item KWIC.R, ModifiedKWIC.R - on canvas. You should figure out what the differences are. Both work.
+\item We discussed about ngram package in R
+\begin{itemize}
+\item \tiny \url{https://cran.r-project.org/web/packages/ngram/ngram.pdf}
+\item \tiny \url{https://cran.r-project.org/web/packages/ngram/vignettes/ngram-guide.pdf}
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\Large Practice Exercises
+\end{frame}
+
+\begin{frame}
+\frametitle{Exercise - 1: KWIC}
+\begin{itemize}
+\item Modify the KWIC.R code from Tuesday to take the following information from a user: a folder/directory path, a word, context size. 
+\item Using this information, print to the R console the word and its context for all .txt files in the folder, one by one.
+\item Note 1: create a small folder with 2 or 3 files. Don't try with 100 files directly.
+\item Note 2: Don't test using a common word like "The" or something. You will see a lot of output! Try with some very infrequent word.
+\item Share your code on the forum for today.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Exercise - 2: Ngrams}
+Take any text file, get top-10 uni/bi/tri/4 ngrams for this file. Create four 4 plots where x-axis is 1--10, y-axis has the ngram frequency (i.e., plot the frequencies of ngrams in descending order). Do this with R markdown and post your html/doc/pdf on discussion forum titled 15th Feb 2018. 
+\end{frame}
+
+\begin{frame}
+\frametitle{Additional Exercise, if interested}
+Modify the KWIC program to suit variable contexts on left and right (e.g., 2 words left, 3 words on right)
+\end{frame}
+
+\begin{frame}
+\frametitle{Next week}
+\begin{itemize}
+\item Topics: overview of text analysis and pattern extraction from collections of documents - text classification, clustering and topic modeling
+\item Introduction to text classification
+\item To do for you: read this article: \url{https://goo.gl/qhT3u4} and we will discuss about this next week on Tuesday during the class. 
+\item Keep this in mind: We are moving from straight forward counting analyses to predictive analysis from next week!
+\end{itemize}
+\end{frame}
+
+\end{document}

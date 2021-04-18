@@ -1,0 +1,314 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+
+\hypersetup{
+    colorlinks,%
+    citecolor=blue,%
+    filecolor=blue,%
+    linkcolor=blue,%
+    urlcolor=blue 
+    %urlcolor=mygreylink     % can put red here to better visualize the links
+}
+
+\author[Sowmya Vajjala]{Instructor: Sowmya Vajjala}
+
+\title[LING 410X]{LING 410X: Language as Data}
+\subtitle{Semester: Spring '18}
+
+\date{09 January 2018}
+
+\institute{Iowa State University, USA}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\begin{frame}\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Class outline}
+\begin{itemize}
+\item Introductions %20 min
+\item Motivation for the course %10 min
+\item Course objectives and Pre-requisites %5 min
+\item Course Logistics %10min
+\item Syllabus %15min
+\item Group activity %15min
+\item Pre-course questionnaire %15 min
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\begin{center}
+\Large Introductions
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{About me}
+\begin{enumerate}
+\item In ISU as Asst. Professor since January 2016.
+\item PhD in Computational Linguistics, 2015.
+\item Teaching experience:
+\begin{itemize}
+\item Language as Data (this course, last year)
+\item Language and Computers (LING 120), Statistical Natural Language Processing (LING 515)
+\item Introductory courses on programming and NLP for applied linguistics students
+\item Technical communication for undergrad engineering students
+\item Graduate level topics seminars for computational linguistics students (2012-13)
+\end{itemize}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{About you?}
+\begin{enumerate}
+\item Name
+\item What do you do in ISU?
+\item What are your interests related to computational analysis of language?
+\item Why did you enroll in this course?
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\begin{center}
+\Large Motivation for the course
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Why this course?}
+\begin{enumerate}
+\item There is a lot of data available everywhere now. Text is one form of such data.
+\item We write comments on amazon.com, read news, write blog posts, use twitter - all these forms of internet usage create lots and lots of textual data everyday.
+\item Knowing how to work with text and extract some kind of information from it is a valuable and industry relevant skill.
+\item This is the main reason for the creation of this course.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{Some context from the news}
+\begin{itemize}
+\item Literature
+\begin{enumerate}
+\item "data mining reveals the six basic emotional arcs of story telling" (\url{https://goo.gl/i1xWTu})
+\item authors "claim they created an algorithm that identifies the literary elements that guarantee a book a spot on the besteller lists." (\url{https://goo.gl/Hsjfmjl})
+\end{enumerate}
+\item Political science:
+\begin{enumerate}
+\item on linguistic analysis of debate transcripts from recent elections (\url{https://goo.gl/BNxTaa}, \url{https://goo.gl/7KIyWj})
+\item 9/11 anniversary speeches: what next analysis tells us (\url{https://goo.gl/dCj477})
+\end{enumerate}
+\item Clinical psychology: "can you detect a manic episode on Twitter?" (\url{https://goo.gl/i5V7ST})
+\end{itemize}
+\small ... and so on. Not all these are super successful or anything. These are just a few examples to show the relevance of what you will learn in areas other than technology and computer science. 
+\end{frame}
+
+\begin{frame}
+\frametitle{Why did I choose R?}
+\begin{enumerate}
+\item R is fastly becoming a popular language for data science and statistical analysis
+\item R has a lot of support for creating visualization tools
+\item Finally, you don't have to immerse yourself into programming to be able to write R code for your work.
+(my personal opinion) \pause
+\item So, I believe it is a suitable language to teach about doing text analysis to non-CS students.
+\item What can CS students benefit: knowledge about text processing and R, programs about analysing textual data. 
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\begin{center}
+\Large Course Objectives and Pre-requisites
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Goals for the course}
+\begin{enumerate}
+\item Teach you basic methods and techniques of text processing
+\item Teach you how to use R to analyse your own data
+\item Teach how to create visualizations of text data  
+\item Make you a comfortable R user who can search for and utilize existing R libraries to find solutions to your text processing problems
+\item Make you work on a practical project that is relevant to the outside world
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{What are not the goals for this course}
+\begin{enumerate}
+\item Make you an expert programmer
+\item Make you an expert R programmer
+\item Make you a statistical analysis expert
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{Pre-requisites}
+None. General curiosity about language, and a willingness to work with computer programs and tools.
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\begin{center}
+\Large Course Logistics
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Meeting and Location}
+\begin{itemize}
+\item  Curtiss 0225 on Tuesdays, and Ross 0137 (Lab) on Thursdays, 9:30-10:50 am
+\\ (Note that the Thursday classroom is different from what is put up on class scheduler.)
+\item \textit{Office hours:} Tuesdays and thursdays, 11 am-12 noon (please email beforehand if there are specific issues to discuss. If this time does not work for you, send an email, and we can meet at a convenient time)
+\item course website: on Canvas.
+\item Credits: 3 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\begin{center}
+Format and Grading
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Course Format}
+\begin{itemize}\itemsep2ex
+\item weekly lectures and practical sessions
+\item 6 assignments (70\%) + 1 final project (25\%)
+\item 5\% for classroom participation/discussion participation
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Assignment and project deadlines}
+\begin{itemize}
+\item Assignment 1: 27 Jan 2018 - 10 marks
+\item Assignment 2: 10 Feb 2018 - 10 marks
+\item Assignment 3: 24 Feb 2018 - 10 marks
+\item Assignment 4: 10 Mar 2018 - 15 marks
+\item Assignment 5: 31 March 2018 - 15 marks
+\item Assignment 6: 14 April 2018 - 10 marks
+\item Group project: (25 Marks total)
+\begin{itemize}
+\item Initial report due: 7 April 2018 (5 marks)
+\item Project presentation: 24-26 April (5 marks)
+\item Project report, and code submission: Finals week, 3rd May (15 marks)
+\end{itemize}
+\end{itemize}
+(3 assginments are already uploaded. Rest will be up in 2--3 weeks)
+\end{frame}
+
+\begin{frame}
+\frametitle{Some general rules:}
+\begin{itemize}
+\item attendance: 80\% attendance requirement. Attendance is counted through per-class questions asked in the class, which can be answered in the discussion forum. 
+\item missing a deadline is okay, but you will not get full credit.
+\item long absence due to illness etc: please inform and follow university procedures.
+\item cheating and plagiarism: see the course handbook, and university policy against plagiarism.
+\item classroom behavior: please be punctual and do not do personal work in the class.
+\item Disability accomodation: Please speak to Disability Resources Office (DRO) to officially request an accomodation.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Other Issues}
+\begin{itemize}
+\item validating enrollment: who is enrolled? who is just here?
+\item feedback about the course: 
+\begin{enumerate}
+\item Talk to me directly, or leave anonymous feedback at: \url{https://goo.gl/forms/9o4AmL9bpOfsHlRF2} or leave a paper feedback in my mailbox. 
+\item Be confident enough to confront me and talk to me if there is a concern. 
+\end{enumerate}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\begin{center}
+Syllabus
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Topics} 
+\begin{itemize}
+\item Introduction to the course, R, and linguistic analysis
+\item Corpus preparation: methods to select, process and clean textual data
+\item Keyword and Key-phrase extraction methods
+\item text classification methods and their applications
+\item topic modeling and its applications
+\item methods of visualizing textual information
+\end{itemize}
+\end{frame}
+
+\begin{frame} 
+\frametitle{Text Book}
+\begin{enumerate}
+\item Primary textbook: "Text analysis for students of literature" by Matthew Jockers
+\begin{itemize}
+\item It is freely available as pdf from university network (from the publisher)
+\item I will be using several other free online tutorials and stuff - urls will be given in appropriate locations
+\item Software: R, RStudio (a graphical interface for R), and several text processing libraries in R (will talk about them as needed).
+\end{itemize}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{Any questions so far?}
+\end{frame}
+
+\begin{frame}
+\frametitle{Next Class ..} 
+\begin{itemize}
+\item To do before next class:
+\begin{enumerate}
+\item Read the syllabus handbook carefully
+\item If you have your own laptop, get that for thursday's class to install required stuff
+\item Please note: Thursday's class is in ROSS 0137
+\end{enumerate}
+\item Next class: 
+\begin{enumerate}
+\item Installing R, Rstudio 
+\item Working with R - tutorial
+\item Assignment 1 description
+\end{enumerate} 
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{}
+\begin{center}
+\Large Group Activity -1 
+\end{center}
+Form into groups of 3 (know your classmates!) and figure out the answer for the given word sentiment classification problem. 
+\end{frame}
+
+\begin{frame}
+\frametitle{Answers? -1}
+Here is how I grouped the words: molistic, slatty, blitty, weasy, sloshful - perhaps belong to one group.
+strungy, struffy, danty, cloovy, cluvious, brastic, frumsy - perhaps belong to one group. If so, then, answer to first question will be C and second question will be D. 
+\\ source: NACLO 2007 puzzles. (\url{http://nacloweb.org/resources/problems/2007/N2007-AS.pdf})
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\begin{center}
+\Large Group Activity - 2
+\end{center}
+Form into groups of 3 (know your classmates!) and figure out the answer for the given search relevance problem. 
+\end{frame}
+
+\begin{frame}
+\frametitle{Answers? -2}
+solution: \url{http://nacloweb.org/resources/problems/2007/N2007-BS.pdf}
+\end{frame}
+
+\end{document}
+
+

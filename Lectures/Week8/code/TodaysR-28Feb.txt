@@ -1,0 +1,18 @@
+list1 <- list("This", "is", "a", "sentence")
+lapply(list1, toupper)
+library(stringr)
+lapply(list1, str_replace, "i","I")
+
+mapply(sum, seq(4), list(15,16,17,18))
+mapply(sum, seq(1:4), list(15,16,17,18), 5)
+mapply(sum, seq(1:4), list(15,16,17,18), 5, SIMPLIFY=FALSE)
+list2 = mapply(data.frame, ID=seq(4), value=seq(15,18), SIMPLIFY=FALSE)
+rbind(list2)
+do.call(rbind,list2)
+
+list1 <- list("This", "is", "a", "sentence")
+list2 = mapply(data.frame, ID=seq(4), value=list1)
+list3 = mapply(data.frame, ID=seq(4), value=list1, MoreArgs=list(stringsAsFactors=FALSE))
+list4 = mapply(data.frame, ID=seq_along(4), value=list1, MoreArgs=list(stringsAsFactors=FALSE))
+
+

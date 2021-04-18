@@ -1,0 +1,110 @@
+processfile <- function(file_name)
+{
+  text <- scan(file_name, what = "character", sep = "\n") 
+  text_as_string <- tolower(paste(text, collapse = " "))
+  text_as_string <- gsub("([[:punct:]])", " ", text_as_string)
+  text_as_string <-  gsub(" +", " ", text_as_string)
+  return(unlist(strsplit(text_as_string, " ")))
+}
+
+***************
+words <- processfile("DollsHouse-Eng.txt")
+helmer <- which(words == "helmer")
+for(i in 1:length(helmer))
+{
+  start <- helmer[i]-2
+  end <- helmer[i]+2
+  cat(paste(words[start:end], sep=" "))
+  cat("\n")
+}
+
+******************
+getKwic <- function(wordsvector, word)
+{
+  word_index <- which(wordsvector == word) #What does "which" do? 
+  for(i in 1:length(word_index)) #What is this loop doing??
+  {
+    start <- word_index[i]-2
+    end <- word_index[i]+2
+    cat(paste(wordsvector[start:end], sep=" ")) #What does "cat" do??
+    cat("\n")
+  }
+}
+
+words <- processfile("DollsHouse-Eng.txt")
+getKwic(words,"Helmer")
+
+***************
+file <- readline("Enter the name of the file you want to search in: ")
+word <- readline("Enter the word for which you want the context: ")
+context0 <- readline("Enter the number of words before and after you want to print: ") 
+context <- strtoi(readline("Enter the number of words before and after you want to print: "))
+***************
+getKwic <- function(wordsvector, word, context)
+{
+  word_index <- which(wordsvector == word) #What does "which" do? 
+  for(i in 1:length(word_index)) #What is this loop doing??
+  {
+    start <- word_index[i] - context
+    end <- word_index[i] + context
+    cat(paste(wordsvector[start:end], sep=" ")) #What does "cat" do??
+    cat("\n")
+  }
+}
+
+##Final getKwic
+getKwic <- function(wordsvector, word, context)
+{
+  word_index <- which(wordsvector == word)
+  for(i in 1:length(word_index)) 
+  {
+    start <- word_index[i] - context
+    if(start < 1)
+    {
+      start <-1
+    }
+    end <- word_index[i] + context
+    if(end >= length(word_index))
+    {
+      end <- word_index
+    }
+    cat(paste(wordsvector[start:end], sep=" ")) 
+    cat("\n")
+  }
+}
+
+
+******************
+
+words <- c("Robert", "Rose", "Ryan", "Richard")
+words[1]
+words[2]
+words[0]
+words[5]
+words[-1]
+words[-2]
+words[1:3]
+words[-2:3]
+words[1:7]
+
+***************
+
+
+
+
+paste("1st", "2nd", "3rd", collapse = ", ")
+paste("1st", "2nd", "3rd", sep = ", ")
+paste("1st", "2nd", "3rd", collapse = ", ", sep = ":")
+vec1 <- c("1st", "2nd", "3rd")
+vec2 <- c("4th", "5th", "6th")
+paste(vec1, collapse = ":: ")
+paste(vec1, sep = ":: " )
+paste(vec1, vec2, sep = "::")
+paste(vec1, vec2, sep = "::", collapse = "--")
+
+
+paste(c('v1','v2'),collapes='+')
+paste(c('v1','v2'),whatever='+')
+
+#summary: sep makes sense only if there are more two or more vectors in paste!
+

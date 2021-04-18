@@ -1,0 +1,167 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\author[Sowmya Vajjala]{Instructor: Sowmya Vajjala}
+
+\title[LING 410X]{LING 410X: Language as Data}
+\subtitle{Semester: Spring '18}
+
+\date{22 February 2018}
+
+\institute{Iowa State University, USA}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\begin{frame}\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Outline}
+\begin{itemize}
+\item Review of last class
+\item Text classification - quick summary of the process (textbook)
+\item Individual or Group activity - summarizing what we did so far
+\item Reminder: Tutorial at 5pm, in this room. 
+\end{itemize}
+\end{frame}
+
+%ADD: Ask to do swirl exercises - revisit!!
+
+\begin{frame}
+\Large Review of last class
+\end{frame}
+
+\begin{frame}
+\frametitle{Text Classification}
+\begin{itemize}
+\item In text classification, we know what the possible categories for our texts can be.
+\item We also have a collection of texts, already assigned these categories. \pause
+\item We want to create a "model" of categorization based on this pre-categorized text collection such that the model can "predict" or "assign" categories to new texts.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{classification and clustering}
+\begin{itemize}
+\item Similarity: we have a collection of texts, we know what are the features we want to look for (words) \pause 
+\item Difference: In the case of classification, we have a few examples classified into some categories, and we want the machine to learn to classify like this for new texts. \pause
+\item In clustering, we do not have such examples, we have no idea how many groupings or possible. We want the machine to figure that out AND do the grouping. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Topic Modeling}
+\begin{itemize}
+\item Idea 1: each document is a mixture of topics
+\item Idea 2: each topic can be represented by groups of words associated with it. \pause
+\item Idea 3: a word may be very important in one topic, but may not be so important in another topic \pause
+\item So how about looking at a collection of documents, extracting main topics from them and forming clusters of words based on topical similarity?
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{}
+\Large Assigned Readings from last class
+\end{frame}
+
+\begin{frame}
+\frametitle{Reading 1}
+\begin{itemize}
+\item They discuss the question of automatically identifying the style of writing in newspapers, using text classification
+\item Data: Four collections (categories) of newspaper articles
+\item Features: Function words (idea - function word usage is not driven by topic, and hence, truly captures style); POS tag frequencies. 
+\item Learning method: a standard classification algorithm in those days (Ripper)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Reading 1 - What did they find out?}
+\begin{itemize}
+\item There are very few features that distinctively identify one category or the other.
+\item So, what if a given document just does not have those features? 
+\item conclusion: they say they can identify signature features that work for some cases at some times, but not all cases at all time. \pause
+\item Note: This is very early work on text classification. It is still a very active area of interest to researchers across disciplines and practitioners in technology industry. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Reading 2}
+\begin{itemize}
+\item Machine learning: the method of showing computers a lot of examples of something, so that it can "learn" from those examples. \pause
+\item Classification is a form of machine learning. \pause
+\item Machine learning is a part of many technologies you use today (email, search, your mobile phone apps, siri/cortana etc) \pause
+\item Applied Linguistics primarily focuses on topics related to teaching, learning languages, instructional settings, assessment by tests etc. 
+\item Machine Learning (specifically text classification) is useful for:
+\begin{enumerate}
+\item reading/writing/listening/speaking assessment (e.g., in GRE/TOEFL etc)
+\item developing tools that are useful for language learners (e.g., grammarly.com)
+\item doing several other tasks such as educational data mining
+\end{enumerate}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Something I came across yesterday}
+\begin{itemize}
+\item Title: "Women better represented in Victorian novels than modern, finds study"
+\item Source: The Guardian (\url{https://goo.gl/uwkis4})
+\item Quick summary - Data: "An analysis of more than 100,000 novels spanning more than 200 years"
+\item Methods: They used a software called BookNLP, which processes books (.txt files too!), identifies references to characters and groups them, does gender identification (i.e., a form of classification) etc.
+\item Hypothesis: "expected to see an increase in the prominence of female characters in literature across the two centuries"
+\item What Data told: "from the 19th century through the early 1960s we see a story of steady decline"
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\Large Doing Text Classification in R
+\\ \tiny (quick summary of chapter 12 in the textbook)
+\end{frame}
+
+\begin{frame}
+\frametitle{What is the data?}
+\begin{itemize}
+\item There is a collection of books written by about 12 authors. 42 books in total.
+\item There is one anonymous text. 
+\item Task is to "learn" to classify between authors, and use the classification model they learnt to predict the authorship of the anonymous text.
+\pause \item But there are only 42 texts for all authors together, which is not really suitable for teaching a machine to learn to classify. 
+\item Text classification typically needs 100s of examples per category. 
+\item How did he handle this issue?: he decided to split each file into 10 equal parts, and treat each part as if it is a text in itself. (i.e., 420 texts now!)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{... continued}
+\begin{itemize}
+\item So, each of these 420 texts is represented as word-frequency tables before proceeeding to next step. \pause
+\item Once we have this, next step is to build a term document matrix \pause 
+\item He does "bag of words" classification i.e., each word is a potential "signature feature". \pause
+\item If we take all words, it will be too many and the "learning" becomes slow. So, he talks about removing words that don't appear frequently enough to be useful. 
+\item Once all this is done, the the actual "learning" part is only one line of R code!
+\item Once done, that "learned model" can be used for predicting the authorship of the unknown texts. 
+\end{itemize} 
+\end{frame}
+
+\begin{frame}
+\frametitle{Rest of Today's class}
+\begin{itemize}
+\item I created small functions to do all the corpus analyses we learnt so far, and stored them in a R file.
+\item There is a small tutorial associated. It has exercises at the end.
+\item Go through the tutorial - line by line - try to understand what is happening. Perhaps add comments to yourself. 
+\item Once you understand whats going on, start doing the exercises.
+\item We will primarily continue on this in the evening tutorial (if anyone comes)
+\item Ask questions, and I suggest working in groups of 2 and discussing with your teammate.
+\end{itemize} %TODO
+\end{frame}
+
+\begin{frame}
+\frametitle{Next Week}
+\begin{itemize}
+\item movie reviews sentiment analysis using tm library. 
+\item no readings. Just spend some time revising what we learnt so far - it will be useful.
+\end{itemize}
+\end{frame}
+
+\end{document}

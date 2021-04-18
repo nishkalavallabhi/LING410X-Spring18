@@ -1,0 +1,330 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\author[Sowmya Vajjala]{Instructor: Sowmya Vajjala}
+
+\title[LING 410X]{LING 410X: Language as Data}
+\subtitle{Semester: Spring '18}
+
+\date{23 January 2018}
+
+\institute{Iowa State University, USA}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\begin{frame}\titlepage
+\end{frame}
+
+%Overview of last week - 10 min
+%questions from end of last week -solution and discussion - 10 min
+%SetWD - discussion - 5 min
+%Discussion of my tutorial - issues I noticed, What you would face in real life - 10 min
+%Summary of other R functions we saw - questions. - 5min
+
+\begin{frame}
+\frametitle{Outline}
+\begin{itemize}
+\item Review of last week
+\item Some advice on coping with R, doing automated text analysis
+\item What is a corpus?
+\item Reading different formats of data
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\centering Review of last week
+\end{frame}
+
+\begin{frame}
+\frametitle{Recap}
+\begin{itemize}
+\item Getting the most frequent words in a text
+\item Looking for regular expression based patterns in text
+\item grep/grepl functions - looking for occurrences of a given pattern/regular expression
+\item sub/gsub functions - for substituting one pattern with another
+\item stringr library, str\_count - function.
+\end{itemize}  
+\end{frame}
+
+\begin{frame}
+\frametitle{Last class' exercise}
+\begin{itemize}
+\item Alter 3 lines such that the program works with most of Gutenberg.org projects
+\item I first identified one pattern (startsWith (*** START OF THE PROJECT)) \pause
+\item I realized after class that it is inconsistent, and does not occur like that in all texts.
+\item So, I changed to something that seemed more consistent.
+\end{itemize}  
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Original code: Specific to that particular text} 
+\footnotesize
+\begin{verbatim}
+english <- scan("DollsHouse-Eng.txt", what = "character", sep = "\n")
+english.start <- which(english == "DRAMATIS PERSONAE")
+english.end <- which(english == 
+      "(The sound of a door shutting is heard from below.)")
+actual_english <- english[english.start:english.end]
+actual_english_string <- paste(actual_english, collapse = " ")
+english_lower <- tolower(actual_english_string)
+english_words <- strsplit(english_lower, "\\W+")
+sorted_freqs_english <- sort(table(english_words), decreasing = TRUE)
+plot(sorted_freqs_english[1:10], type="b")
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{First Solution, to make it work for all gutenberg.org texts}
+\tiny
+\begin{verbatim}
+english <- scan("DollsHouse-Eng.txt", what = "character", sep = "\n")
+meta.top.end <- which(startsWith(english,"*** START OF THIS PROJECT GUTENBERG EBOOK"))
+meta.bottom.start <- which(startsWith(english, "End of the Project Gutenberg EBook"))
+actual_english <- english[meta.top.end+1:meta.bottom.start+1]
+actual_english_string <- paste(actual_english, collapse = " ")
+english_lower <- tolower(actual_english_string)
+english_words <- strsplit(english_lower, "\\W+")
+sorted_freqs_english <- sort(table(english_words), decreasing = TRUE)
+plot(sorted_freqs_english[1:10], type="b")
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Second Solution}
+\tiny
+\begin{verbatim}
+library(stringr)
+english <- scan("DollsHouse-Eng.txt", what = "character", sep = "\n")
+meta.top.end <- which(str_detect(english,"START OF THIS PROJECT"))
+meta.bottom.start <- which(str_detect(english,"END OF THIS PROJECT"))
+actual_english <- english[meta.top.end+1:meta.bottom.start-1]
+actual_english_string <- paste(actual_english, collapse = " ")
+english_lower <- tolower(actual_english_string)
+english_words <- strsplit(english_lower, "\\W+")
+sorted_freqs_english <- sort(table(english_words), decreasing = TRUE)
+plot(sorted_freqs_english[1:10], type="b")
+\end{verbatim}
+\end{frame}
+
+\begin{frame}
+\frametitle{Does this work?}
+\begin{itemize}
+\item Seems to work, but what if some book does not use upper case for those words? (Note: Gutenberg.org books are volunteer typing/proof reading efforts) \pause
+\item We should perhaps look for some way of making the pattern case-insensitive
+\item Or there is some other innovative solution. \pause
+\item Working with real-world data is this process of trial and error. 
+\item So, don't get frustrated. Persistence is the key. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{General advice on working through this course}
+\begin{itemize}
+\item Follow the hands-on sessions - ask as many questions as you want, use the discussion forum
+\item Get your hands dirty with lot of error messages in R studio
+\item Carefully work through all the tutorial documents I share, or textbook lessons. 
+\item It needs some extra time, and is not a regular humanities/social sciences class - accept that.
+\item Believe that you will become text analysis novice-gurus soon!
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Last week's exercise and discussion}
+\begin{itemize}
+\item In Doll's House, how many times did: "you know" appear? \\
+str\_count(dollshousetext,"you know") - gives 32
+\item How many times did numbers  appear in the text (99712 is to be counted as 1 number. Not 5)?
+\\ str\_count(dollshousetext, "\textbackslash\textbackslash d+") - gives 10
+\end{itemize}
+Note: dollshousetext here - is the output after paste() line in our original code i.e., the actual\_english\_string after removing all metadata.
+\end{frame}
+
+\begin{frame}
+\frametitle{setwd()}
+\begin{itemize}
+\item How do we get the path? (from R-studio, from file browser on your computer i.e., my computer, finder etc)
+\item Special caution for windows computers about paths: Forward vs Backward slash symbol
+\item folder vs file
+\item Why bother about setwd()? When is it not relevant? 
+\end{itemize} \pause
+Suggestions: \\
+Go back and do Lesson 2 in Swirl(). \\ Another useful ref:  
+\url{https://www.statmethods.net/interface/workspace.html}
+\end{frame}
+%how to set wd: navigate R file browser/look in your computer for path/else, just give the full path. 
+
+
+\begin{frame}
+\frametitle{}
+\centering What is a corpus?
+\end{frame}
+
+\begin{frame}
+\frametitle{Corpus}
+\begin{itemize}
+\item As a loose definition, we call the texts we want to analyze as the corpus.
+\item A single piece of text is not a corpus. Corpus is a collection of such single texts. 
+\item It can be 10 texts. It can be 100 texts. It can be 1000 texts. \pause
+\item A collection of speeches converted into text (e.g., transcripts) is also a text corpus.
+\item A collection of tweets is a corpus. \pause
+\item As a working definition, we consider any collections of text we choose to work on to solve some problem as a corpus. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{How do we get hold of a corpus?}
+\begin{itemize}
+\item You can a pre-existing corpus if that suits what you want to work on. 
+\item Creating our own corpus to address our own problem:
+\begin{itemize}
+\item Data collection (downloading, scanning, web scraping etc)
+\item Data preparation/pre-processing
+\item Deciding on how to extract the information you need
+\item Writing R code
+\item Getting the results and analyzing them.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Corpus pre-processing}
+\begin{itemize}
+\item Loading the corpus into R environment
+\item Reading different formats of data in a way R can understand
+\item Doing any other processing steps as needed (lower casing, sentence splitting etc)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Loading corpus into R}
+Before getting into this, we should know what are the different formats of text we can see online:
+\begin{itemize}
+\item plain text files - files that you can open and read in most of the text editors starting with basic ones such as notepad. 
+\item PDF files - files you usually read in a pdf reader
+\item Word documents and the likes -MS word etc.
+\item XML documents 
+\item HTML documents
+\item tweets, tables etc (we will discuss as they come)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{PDF files}
+\begin{itemize}
+\item In the last class, we saw how to easily open a text file using scan() function in R and start doing some stuff like counting word frequencies right away. 
+\item What happens if there is a PDF file instead of a text file in that scan() call. Did anyone try? \pause
+\item Sometimes, you may end up with having only pdf versions of documents as your corpus (e.g., a corpus of research articles on topic X from XYZ journal)
+\item What should we do in such cases? \pause
+\item R supports pdf to text extraction. One of the libraries that can do this is: pdftools
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Pdftools} 
+\begin{itemize}
+\item Install pdftools library by going to Tools $-->$ Install Packages and typing pdftools there.
+\item Once installed, here is how you get a plain text version of a pdf file:
+\begin{verbatim}
+library(pdftools)
+txt <- pdf_text("somefilename.pdf") 
+\end{verbatim}
+note: I am assuming this file is in my current working directory.  Else, we need to give full file path.
+\pause \item This will not give you a cleanly formatted text string, you need to write extra code for that. This may also not work perhaps with all pdfs. Be aware of that.
+\item If you end up using this for your work, make sure it works on your pdfs, and know what additional cleaning/formatting you should do within R to get some clean text.
+\item More information on this library: \url{https://cran.r-project.org/web/packages/pdftools/pdftools.pdf} 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Doc files and qdaptools library}
+\begin{itemize}
+\item Install qdaptools library by going to Tools $-->$ Install Packages and typing qdaptools there.
+\item Once installed, here is how you get a plain text version of a docx file:
+\begin{verbatim}
+library(qdapTools)
+txt <- read_docx("somefile.docx")
+\end{verbatim}
+\end{itemize}
+More functions: \url{https://cran.r-project.org/web/packages/qdapTools/qdapTools.pdf} - have a look at read\_docx section here. 
+\end{frame}
+
+\begin{frame}
+\frametitle{XML files}
+\begin{itemize}
+\item XML stands for eXtensible Markup Language. 
+\item It is a way to store and data with a tag structure.. so we can add a lot of metadata to text in this format. 
+\item Although not extremely common, you may often end up having access to only XML versions of some corpus and asked to do something with it.
+\item This can be done using XML library (note the upper case).
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Reading XML files in R} \tiny
+\begin{verbatim}
+library(XML)
+books <- xmlTreeParse("Books.xml", useInternalNodes = TRUE)
+book_titles <- sapply(getNodeSet(books, "//catalog/book/title/text()"), xmlValue)
+author_names <- sapply(getNodeSet(books, "//catalog/book/author/text()"), xmlValue)
+description <- sapply(getNodeSet(books, "//catalog/book/description/text()"), xmlValue)
+output <- data.frame(book_titles,author_names,description)
+write.table(output, "xmlout.csv", sep="\t")
+\end{verbatim}
+\end{frame}
+
+\begin{frame}
+\frametitle{more on XML}
+\begin{itemize}
+\item I just took a simple example, but you can do many more complex things with XML package in R.
+\item If you end up working with lot of xml files for some reason in future, remember to visit the package documentation: \url{https://cran.r-project.org/web/packages/XML/XML.pdf}
+\item Another tutorial on XML parsing in R: \url{https://www.stat.berkeley.edu/~statcur/Workshop2/Presentations/XML.pdf}
+\item I think Chapter 10 in textbook is complex to understand - so pointing to these resources.
+\item Literature students - you may see more corpora in XML format, if we have to go by the author.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{HTML}
+\begin{itemize}
+\item HyperText Markup Language  - used to display webpages
+\item the markup tells a webpage how to display text (font, bold, url, image etc)
+\item Looks similar to XML, but different, and it serves a different purpose. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Reading HTML files in R}
+\tiny
+\begin{verbatim}
+library(XML)
+url <- "http://radar.oreilly.com/2011/09/building-data-science-teams.html"
+doc <- htmlParse(url, useInternal = TRUE)
+links <-xpathSApply(doc, "//a/@href")
+\end{verbatim}
+\end{frame}
+
+\begin{frame}
+\frametitle{Assignment 1 - reminder/description}
+\begin{itemize}
+\item deadline: 27th Jan
+\item Two questions - first one is writing a brief lit. review
+\item Second question - small questions in R, which you should be able to do if you followed the class.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Next Class}
+\begin{itemize}
+\item Continuation of today's topic
+\item Some hands on practice
+\item Storing your lines of code in .R files
+\end{itemize}
+\end{frame}
+
+%Thursday
+%Examples of reading a directory of texts using a loop.
+%A2 is on reading HTML, reading through GuardianR 
+%R Markdown usage. 
+
+\end{document}

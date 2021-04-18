@@ -1,0 +1,147 @@
+---
+title: "Topic Modeling with Mallet"
+author: "Sowmya"
+date: "3/20/2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Purpose of this tutorial is to expand on what the author describes in Chapter 13. You have to first read Chapters 10 and 13 (and make notes), before trying this out. 
+
+## Software Requirements: 
+Java needs to be installed on your computer. Go to this link for installation: \url{https://java.com/en/download/help/index_installing.xml}
+
+After that: R library mallet needs to be installed in Rstudio (which inturn installs rJava). On MacOS, R may also prompt you to install some other some legacy java version - if it does, install that. 
+
+R libraries you need to install: mallet, wordcloud, XML
+
+## Data pre-processing:
+The author again uses the XML corpus from Text classification example - this is provided as supplementary material in the electronic version of the textbook. I am providing it in the data folder inside this folder. 
+
+He first splits each file into 1000 chunks (instead of 10 in the classification example) using the function below and does these pre-processing: Extract text from xml, lowercase it, replace anything that is not an alpha-numeric character or a space or an apostrophe with a space.
+
+Then, the next part is about splitting the text into multiple parts. Two methods are suggested for that. First one is - split the text into X parts based on the length of the text i.e., split after every 1000 words (for example). Second method is: splitting all texts into equal number of words. If you do that, sometimes, there may be a few leftover words at the end. This function addresses that too (how?). 
+
+```{r}
+makeFlexTextChunks <- function(doc.object, chunk.size=1000, percentage=TRUE){
+  paras <- getNodeSet(doc.object,
+                      "/d:TEI/d:text/d:body//d:p",
+                      c(d = "http://www.tei-c.org/ns/1.0"))
+  words <- paste(sapply(paras,xmlValue), collapse=" ")
+  words.lower <- tolower(words)
+  words.lower <- gsub("[^[:alnum:][:space:]']", " ", words.lower)
+  words.l <- strsplit(words.lower, "\\s+")
+  word.v <- unlist(words.l)
+  x <- seq_along(word.v)
+  if(percentage){
+    max.length <- length(word.v)/chunk.size
+    chunks.l <- split(word.v, ceiling(x/max.length))
+  } else {
+    chunks.l <- split(word.v, ceiling(x/chunk.size))
+    #deal with small chunks at the end
+    if(length(chunks.l[[length(chunks.l)]]) <=
+       length(chunks.l[[length(chunks.l)]])/2){
+      chunks.l[[length(chunks.l)-1]] <-
+        c(chunks.l[[length(chunks.l)-1]],
+          chunks.l[[length(chunks.l)]])
+      chunks.l[[length(chunks.l)]] <- NULL
+    }
+  }
+  chunks.l <- lapply(chunks.l, paste, collapse=" ")
+  chunks.df <- do.call(rbind, chunks.l)
+  return(chunks.df)
+}
+```
+
+Once you have that function, the next step is to use this function to create such chunks for each file, combine them into a two column data frame where one column represents the text and chunk id and the other column shows the words in that chunk.
+```{r}
+library(XML)
+wd <- "~/Dropbox/ClassroomSlides-BothCourses/LING410X/Week11Mats/21Mar2018/"
+inputDir <- paste(wd,"data/XMLAuthorCorpus",sep="")
+stopwords_path <- paste(wd, "data/stoplist.csv",sep="")
+files.v <- dir(path=inputDir , pattern=".*xml")
+chunk.size <- 1000
+topic.m <- NULL
+for(i in 1:length(files.v)){
+  doc.object <- xmlTreeParse(file.path(inputDir, files.v[i]),
+                             useInternalNodes=TRUE)
+  chunk.m <- makeFlexTextChunks(doc.object, chunk.size,
+                                percentage=FALSE)
+  textname <- gsub("\\..*","", files.v[i])
+  segments.m <- cbind(paste(textname,
+                            segment=1:nrow(chunk.m), sep="_"), chunk.m)
+  topic.m <- rbind(topic.m, segments.m)
+}
+documents <- as.data.frame(topic.m, stringsAsFactors=F)
+colnames(documents) <- c("id", "text")
+```
+
+This is all the pre-processing needed before you start training a topic model. 
+mallet.import takes 5 arguments - ids for documents, text of the documents, stopwords list (csv file), preserve case (true or false), and a regular expression to split the text into tokens/words.
+
+Once you have these, creating a topic model is a simple procedure. You need to specify the number of topics. 
+```{r}
+library(mallet)
+mallet.instances <- mallet.import(documents$id,documents$text,stopwords_path,FALSE,
+                                  token.regexp="[\\p{L}']+")
+topic.model <- MalletLDA(num.topics=43)
+topic.model$loadDocuments(mallet.instances)
+
+#The following line is optional. 
+#Mallet takes default parameters if you don't specify anything here.
+topic.model$setAlphaOptimization(40, 80)
+
+#This starts the training process
+topic.model$train(400)
+
+```
+We can use explore this topic model to analysse topics and words in this data:
+```{r}
+#browse the vocabulary of this dataset and get some stats.
+vocabulary <- topic.model$getVocabulary()
+length(vocabulary)
+head(vocabulary)
+vocabulary[1:50]
+
+#word freqs has 3 columns. word, its frequency in entire corpus, its frequency per document.
+word.freqs <- mallet.word.freqs(topic.model)
+
+#this below line returns a matrix where each row is a topic, 
+#each column is a word in the dataset.
+topic.words.m <- mallet.topic.words(topic.model,smoothed=TRUE,normalized=TRUE)
+
+dim(topic.words.m)
+rowSums(topic.words.m)
+topic.words.m[1:3, 1:3]
+
+colnames(topic.words.m) <- vocabulary
+keywords <- c("california", "ireland")
+topic.words.m[, keywords]
+
+#The topic which has the highest count of numbers in the row (indicating weights for words) 
+#can be thought of as an important topic. 
+imp.row <- which(rowSums(topic.words.m[, keywords]) ==max(rowSums(topic.words.m[, keywords])))
+
+#10 most frequent words in the Topic given by imp.row
+mallet.top.words(topic.model, topic.words.m[imp.row,], 10)
+
+#5 most frequent words in the Topic 10
+mallet.top.words(topic.model, topic.words.m[10,], 5)
+
+```
+
+## Little bit of visualization
+This needs the library wordcloud. 
+```{r warning=FALSE}
+library(wordcloud)
+
+#plotting a word cloud for the imp.row
+topic.top.words <- mallet.top.words(topic.model,topic.words.m[imp.row,], 100)
+wordcloud(topic.top.words$words,topic.top.words$weights,c(4,.8), rot.per=0, random.order=F)
+
+#plotting a word cloud for topic 20
+topic.top.words <- mallet.top.words(topic.model,topic.words.m[20,], 100)
+wordcloud(topic.top.words$words,topic.top.words$weights,c(4,.8), rot.per=0, random.order=F)
+```{r}

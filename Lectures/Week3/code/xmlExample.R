@@ -1,0 +1,7 @@
+library(XML)
+books <- xmlTreeParse("Books.xml", useInternalNodes = TRUE)
+book_titles <- sapply(getNodeSet(books, "//catalog/book/title/text()"), xmlValue)
+author_names <- sapply(getNodeSet(books, "//catalog/book/author/text()"), xmlValue)
+description <- sapply(getNodeSet(books, "//catalog/book/description/text()"), xmlValue)
+output <- data.frame(book_titles,author_names,description)
+write.table(output, "xmlout.csv", sep="\t")

@@ -1,0 +1,297 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\author[Sowmya Vajjala]{Instructor: Sowmya Vajjala}
+
+\title[LING 410X]{LING 410X: Language as Data}
+\subtitle{Semester: Spring '18}
+
+\date{8 February 2018}
+
+\institute{Iowa State University, USA}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\begin{frame}\titlepage
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Class Outline}
+\begin{itemize}
+\item writing R functions
+\item Rmarkdown: introduction and practice exercise
+\item Reminder: Assignment 2 due on 10th!
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Interesting stuff I found}
+\begin{itemize}
+\item a 1994 article that did text analysis on the "Book of Genesis"! \\ 
+\url{http://projecteuclid.org/download/pdf_1/euclid.ss/1177010393}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\Large Writing R functions
+\end{frame}
+
+\begin{frame}
+\frametitle{What is a function? Why use it?}
+\begin{itemize}
+\item Functions are reusable pieces of code you can just "call" and use instead of writing everything line by line.
+\item sort(), unlist(), table() and all these things you saw are such "built-in" functions. \pause
+\item Let us say you want to sort a list of words and frequencies in decreasing order. 
+\item You don't now start writing code for the sorting process from scratch. 
+\item You just use sort() function, and you can use it again and again. 
+\item If we already have so many functions in R, why write new ones? \pause
+\item To do some custom tasks that we want, for which some such function does not already exist in R.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Functions vs Loops - your responses}
+\begin{itemize}
+\item In some sense, a loop is also some sort of function to repeatedly do something.
+\item A loop can call some functions repeatedly inside it
+\item A function can have loops inside it \pause
+\item Difference is that: your function, once defined and saved somewhere on your computer, can be "imported" into any R code you are writing at a later point in time, and used as if it is a built-in R function. \pause
+\item With loops, you cannot do that unless you put that loop inside a function. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Writing a function - Example}
+\scriptsize
+\begin{verbatim}
+my_square_function <- function(number)
+{
+  return(number * number)
+}
+
+my_square_function(4) #Gives 16
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Writing a function - Example}
+\scriptsize
+\begin{verbatim}
+my_number_function <- function(number)
+{
+  return (c(number*number, number*number*number, number*number*number*number))
+}
+
+my_number_function(4) #Gives a vector with values 16, 64, 256
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{So, how do I use functions?}
+\begin{itemize}
+\item Let us take this example from last week, for creating dispersion plots.
+\item When I wanted to create a dispersion plot for the word "nora" in Dolls House, here is what I did:
+\tiny
+\begin{verbatim}
+progress <- seq(1:length(dollshouse_words_vector))
+nora <- which(dollshouse_words_vector == "nora")
+length(nora)
+nora_progression <- rep(NA, length(progress))
+nora_progression[nora] <- 1
+plot(nora_progression, main="Dispersion plot for word 'nora' in 'A Doll\'s House' play",
+    xlab="position in text", ylab="nora", type="h", ylim=c(0,1), yaxt = 'n')	
+\end{verbatim}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Where are functions useful?}
+When I wanted to repeat the same process for another word "rank", here is what I had to do:
+\tiny
+\begin{verbatim}
+progress <- seq(1:length(dollshouse_words_vector))
+rank <- which(dollshouse_words_vector == "rank")
+rank_progression <- rep(NA, length(progress))
+rank_progression[rank] <- 1
+plot(rank_progression, main="Dispersion plot for word 'rank' in 'A Doll\'s House' play",
+     xlab="position in text", ylab="rank", type="h", ylim=c(0,1), yaxt = 'n')
+\end{verbatim}
+\normalsize
+If I had a third word, I should do all these again. What if I can put this piece of code as a custom function, and use that function wherever I want?
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Writing a function for dispersion plot}
+\tiny
+\begin{verbatim}
+get_dispersion_plot <- function(wordsvector, word)
+{
+  progress <- seq(1:length(wordsvector))
+  word_presence <- which(wordsvector == word)
+  length(word_presence)
+  word_progression <- rep(NA, length(progress))
+  word_progression[word_presence] <- 1
+  plot(word_progression, main="Dispersion plot for the given word in 'A Doll\'s House' play",
+    xlab="position in text", ylab=word, type="h", ylim=c(0,1), yaxt = 'n')
+}
+\end{verbatim}
+\normalsize Now, I can use this dispersion function to get the plot for any word, once I create that vector of words. 
+\\- Note that this is not a loop. 
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{A function for getting the word vector from a file}
+\tiny
+\begin{verbatim}
+get_words_vector <- function(file_path)
+{
+  fulltext <- scan(file_path, what = "character", sep = "\n")
+  fulltext_as_string <- paste(fulltext, collapse = " ")
+  words_vector <- unlist(strsplit(tolower(fulltext_as_string), "\\W+"))
+  return (words_vector)
+}
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Using these two functions}
+\begin{itemize}
+\item Let us say I put these functions in a file called TextAnalFunctions.R.
+\item Using these functions in R console follows the following steps:
+\begin{enumerate}
+\item Set the working directory to where your file is (else, use the full path)
+\item First, I "source" or load the R file with my functions
+\item use get\_words\_vector to get words vector for the file
+\item use that words vector from the previous step to get dispersion plot for a given word from this vector.
+\end{enumerate}
+\item in R \begin{verbatim}
+source("TextAnalFunctions.R").
+words <- get_words_vector("DollsHouse-Eng.txt")
+get_dispersion_plot(words, "nora") 
+#or whatever word you want. 
+\end{verbatim}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Functions: Conclusion}
+\begin{itemize}
+\item Functions also make your R code more readable.
+\item When to use (and whether to use) functions - depends on what you are doing.
+\item More examples: \url{http://www.statmethods.net/management/userfunctions.html}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\Large Using functions to find Hapax Legomena (Chapter 7)
+\end{frame}
+
+\begin{frame}
+\frametitle{Hapax Legomena}
+\begin{itemize}
+\item We looked at average word frequency and TTR on Tuesday. 
+\item Another way of looking at vocabulary richness is to look at the number of words that occur very infrequently in the text. 
+\item If we consider words that appeared only once, we call them singleton/one-zies/hapax legomena
+\item How do you get such information? There is no such pre-defined function like mean() or sum() to return frequencies that are 1. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{sapply, with custom function definition}
+Consider this line below (chapters.raw - is the variable from our last class): \tiny
+\begin{verbatim}
+hapax <- sapply(chapters.raw, function(x) sum(x == 1)) 
+\end{verbatim} \normalsize
+Alternatively, the following also works: \tiny
+\begin{verbatim}
+hapaxfunction <- function(x)
+{
+  return(sum(x ==1))
+}
+hapax <- sapply(chapters.raw, hapaxfunction) 
+\end{verbatim}
+-What this says is: for each item in chapters.raw, i.e., for each chapter, count the number of words whose frequency is 1. 
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{From what we saw so far...}
+What will these lines below do?: \tiny
+\begin{verbatim}
+hapax <- sapply(chapters.raw, function(x) sum(x == 1))
+hapax <- unname(hapax)
+lengths <- unname(sapply(chapters.raw, sum)) #What will this have?
+new <- hapax/lengths
+\end{verbatim} \normalsize
+-What will "new" have eventually??
+\end{frame}
+
+\begin{frame}
+\Large R Markdown
+\end{frame}
+
+\begin{frame}
+\frametitle{What is R Markdown?}
+\begin{itemize}
+\item R markdown is a formatting system to create HTML, PDF, or Word reports that use R code.
+\item Why use it?: Typically used to share your R based analysis and results with others. Supports reproducible research.
+\item Advantage: R code can be embedded inside the report. So, you can just keep adding R code, its output, and your comments, and prepare a neatly formatted report. \pause
+\item This is how all those tutorial documents I shared have been created. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{How to start?}
+\begin{itemize}
+\item First, install the Rmarkdown package by going to tools$->$install packages and selecting rmarkdown or by typing: install.packages("rmarkdown") on R console. \pause
+\item Now, in your R studio, go to File $->$ New $->$ Rmarkdown. Give some title to your report, write your name, and create a document. \pause
+\item There are three major types of data in this - it starts with some metadata about the document, and then there is either Rcode or some plain text.
+\item Resource: \url{http://rmarkdown.rstudio.com/lesson-1.html}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{R markdown exercise}
+\begin{itemize}
+\item With this elementary introduction to Rmarkdown, do a small exercise (individually or as groups)
+\item Prepare a R markdown report that shows the top ten words in any text file you take as input (sample text file provided) 
+\item It need not necessarily be from Gutenberg.org - so, you don't have to handle the removal of metadata part. 
+\item Note: We already did this before, and you also have my Tutorial document as a reference to do this.
+\item Once you are done, go to Canvas course page, open Discussion forums, look for a forum titled 8thFeb2018 and post your doc (or html or pdf) reports there along with the .Rmd file you created.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Next Week}
+\begin{itemize}
+\item Text analysis topics: 
+\begin{itemize}
+\item Searching for keywords and their contexts inside texts (Read chapters: 8--9 in textbook)
+\item Moving beyond single words and looking at word pairs, word triplets etc.
+\end{itemize}
+\item R specifics: creating working with .R files. Continuing to work with R functions.  
+\item For those who want to do more: 
+\begin{enumerate}
+\item Convert all text analyses we did so far into functions and store them in one file, calling it text analysis or something.
+\item Use loops to loop through all files in a folder, and repeat whatever text analyses you want by calling these functions in the loop.
+\end{enumerate}
+\end{itemize}
+\end{frame}
+
+\end{document}
+
+\begin{frame}
+\frametitle{Optional second exercise}
+\framesubtitle{... for those who finished the first one}
+\begin{itemize}
+\item Get the 1000 most recent tweets on "Microsoft" from Twitter and extract the following information from them:
+\begin{itemize}
+\item number of unique users in these tweets
+\item percentage of retweets in these tweets
+\item average number of words in each tweet
+\end{itemize}
+\item Try to create a report using R markdown for this as well (without making your twitter access tokens and stuff visible to readers!)
+\end{itemize}
+\end{frame}
+

@@ -1,0 +1,277 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\author[Sowmya Vajjala]{Instructor: Sowmya Vajjala}
+
+\title[LING 410X]{LING 410X: Language as Data}
+\subtitle{Semester: Spring '18}
+
+\date{6 February 2018}
+
+\institute{Iowa State University, USA}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\begin{frame}\titlepage
+\end{frame}
+
+%MENTION THIS: 
+
+\begin{frame}
+\frametitle{Class Outline}
+\begin{itemize}
+\item Recap of last week
+\item A note on the various data structures in R
+\item Calculating lexical richness in a text (Chapters 6 in Textbook)
+\item Reminder: Assignment 2 submission is due on 10th Feb.
+\item news: \url{https://www.r-bloggers.com/analysis-of-trumps-state-of-the-union-speech-with-r/}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Recap of last week-1}
+\begin{itemize}
+\item Text analysis questions: Analyzing word usage in different parts of a text (chapter by chapter, word by word etc)
+\item R specific concepts:
+\begin{enumerate}
+\item Differences between a vector and a list
+\item Usage of lapply 
+\item Writing a for- loop
+\item Replacing NAs with zero
+\end{enumerate}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Recap of last week-2}
+My Question: Using R program, try to find out:
+\begin{itemize}
+\item How many chapters are there in David Copperfield (\url{http://www.gutenberg.org/files/766/766-0.txt})? 
+\item What chapter has the most number of occurrences of the name Murdstone? \pause
+\item My solution for 1st question (I actually do not need all that other stuff to answer just this question!)
+\scriptsize
+\begin{verbatim}
+davidc <- scan("davidc.txt", what = "character", sep = "\n")
+davidc.chap.positions <- grep("^CHAPTER \\d", davidc)
+length(davidc.chap.positions)
+\end{verbatim} \small
+\item For second part, Brody will explain how he found out. 
+\item Additionally, you can check: 01FebSolution.R for today's canvas (.. and modify it according to your specifications)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\Large Data Structures in R
+\end{frame}
+
+\begin{frame}
+\frametitle{What is a data structure?}
+\begin{itemize}
+\item a datastructure refers any way of organizing data.
+\item examples: a list, a vector, a matrix, a table etc.
+\item purpose of a data structure is to store data in some organized manner such that it is easy to access it later 
+\item What data structure you need will depend on how your input and output should look like.
+\item When we use pre-defined R functions such as sort, lapply etc., we should know what do they take as input, and what they give as output. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{R Datastructures: Lists and Vectors}
+%start with a question.
+\begin{itemize}
+\item What is a vector?
+\item What is a list?
+\item What is the difference between vector and list? \pause
+\item What does a sort() function take as input? a vector or a list? How can I find out? \pause
+\item What does seq(1:5) return? a list or a vector? How can I find out? 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{R Datastructures: Matrices and Arrays}
+\begin{itemize}
+\item A matrix is a 2 dimensional datastructure (arranged in rows and columns) where all elements are of the same data type (integers or strings or decimal numbers etc)
+\item If we extend this idea to more than 3-dimensions, we have a data structure called array.
+\item How does a matrix look like? Try this:  matrix(1:6, ncol=3)
+\item How does an array look like? Try this for a 3-D array: array(1:8, dim=c(2, 2, 2))
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{R Datastructures: Data Frames}
+\begin{itemize}
+\item A "Data Frame" is useful to combine several vectors together as columns in a table. 
+\item We use data.frame() function to create a data frame. \pause
+\item Let us look at this example:
+\footnotesize
+\begin{verbatim}
+line_number <- seq(1:5)
+names <- c("Santa", "Banta", "Manta", "Tanta", "Anton")
+college <- c("LAS", "Business", "Engineering", "LAS", "VetMed")
+df <- data.frame(line_number,names, college)
+\end{verbatim}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{R Datastructures: Factors}
+\begin{itemize}
+\item A "Factor" is a data structure useful to store categorical data (what is that?) \pause
+\item In my previous data frame example, the column college has 5 values, but 4 unique values. 
+\item The 4 unique values can be seen as different factors/categories of colleges. 
+\item We use factor() function to work with factor data structure.
+\item Example usage: factor(df\$college) from previous slide.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\Large Lexical Variety
+\end{frame}
+
+\begin{frame}
+\frametitle{What is lexical variety or vocabulary richness}
+\begin{itemize}
+\item Lexical variety refers to some quantification of the diverseness of the vocabulary used in a text/corpus.
+\item There are two common ways of defining lexical variety:
+\begin{itemize}
+\item Mean word frequency: average frequency of words in a document.
+\item Type-token ratio: (number of unique words/total number of words)*100
+\end{itemize} \pause
+\item Let us say this is the text I have: "Here is a sentence with sentence coming twice".
+\item What is the mean-word frequency? What is the type-token ratio? \pause
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Calculating Lexical Variety}
+Let us start from last week's example again. 
+\tiny
+\begin{verbatim}
+moby <- scan("mobydick.txt", what = "character", sep = "\n")
+moby.start <- which (moby ==  "CHAPTER 1. Loomings.")
+moby.end <- which (moby == "orphan.")
+moby.actual <- moby[moby.start:moby.end]
+moby.chap.positions <- grep("^CHAPTER \\d", moby.actual)
+moby.actual[moby.chap.positions]
+
+moby.last.position <- length(moby.actual)
+moby.chap.positions <- c(moby.chap.positions, moby.last.position)
+moby.actual[moby.chap.positions]
+
+chapters.raw <- list()
+for (i in 1:(length(moby.chap.positions) -1))
+{
+  titleline <- moby.chap.positions[i]
+  title <- moby.actual[titleline]
+  start <- titleline+1
+  end   <- moby.chap.positions[i+1]-1
+  chapter.lines <- moby.actual[start:end]
+  chapter.string <- tolower(paste(chapter.lines, collapse = " "))
+  chapter.string <- gsub(" +", " ", gsub("[[:punct:]]", " ", chapter.string))
+  chapter.words <- unlist(strsplit(chapter.string, "\\W"))
+  chapter.freqs <- table(chapter.words)
+  chapters.raw[[title]] <- chapter.freqs
+}
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Mean Word Frequency}
+\begin{itemize}
+\item Let us say I want to calculate mean (average) word frequency for each chapter in Mobydick. 
+\item What information do I need for this?  \pause
+\item Okay, let us take one chapter as an example.
+\tiny
+\begin{verbatim}
+sum_of_all_word_freqs_chapter1 <- sum(chapters.raw[[1]])
+num_words_in_chapter1 <- length(chapters.raw[[1]])
+mean_word_freq_chapter1 <- sum_of_all_word_freqs_chapter1/num_words_in_chapter1
+another_way_for_this <- mean(chapters.raw[[1]])
+ttr_chapter1 <- (num_words_in_chapter1/sum_of_all_word_freqs_chapter1)*100
+\end{verbatim}
+\small
+\item If we do this for all chapters, we get the mean word frequency per chapter. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{How do we get mean word frequency for all chapters?}
+\begin{itemize}
+\item Use a for loop like last week:
+\tiny
+\begin{verbatim}
+means = c()
+for(i in 1:length(chapters.raw))
+{
+ means[i] <- sum(chapters.raw[[i]])/length(chapters.raw[[i]]) 
+}
+\end{verbatim} \pause
+\normalsize
+\item Use lapply: lapply(chapters.raw, mean)
+\item What does this give? 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{unname and unlist}
+\begin{itemize}
+\item lapply returns a list. unlist() converts it into a vector (plotting function in the next slide looks for a vector).
+\item unname() removes the chapter names and retains only the numbers (Not needed here, Just doing to show this)
+\tiny
+\begin{verbatim}
+means <- unlist(means)
+means <- unname(means)
+\end{verbatim} \small
+\item At this point, means is just a vector of numbers, which we can use to plot.
+\pause \item Instead of using lapply + unlist, we can use sapply() which directly returns a vector. 
+\end{itemize}
+\normalsize note: textbook uses rbind and do.call() functions to do the same. 
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Plotting the mean word frequency}
+\tiny
+\begin{verbatim}
+par(mfrow=c(1,2)) 
+plot(means, type="h")
+plot(scale(means), type = "h")
+\end{verbatim} \normalsize
+Look at the two plots - what are the differences? What is scale() doing? 
+\end{frame}
+
+\begin{frame}
+\frametitle{scaling}
+\begin{itemize}
+\item Scaling a numeric vector means subtracting the average value from each number in the vector
+\item So, if we plot the scaled vector, it will show us the deviations from average. \pause
+\item In this case, the positive values after scaling indicate the chapters which have a higher mean word frequency than the overall mean.
+\item negative values indicate chapters which have a lower mean word frequency than the overall mean. \pause
+\item if mean word frequency is used as a measure of lexical difficulty, we can say those positive valued chapters are difficult.  
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Thursday}
+\begin{itemize}
+\item R: Writing our own functions in R
+\item Creating R markdown reports (like my tutorial pdfs)
+\item Practice what we learnt so far
+\end{itemize}
+%And an activity with creating R markdown of some basic analysis: can give an assignment about twitter.
+\end{frame}
+
+\end{document}
+
+%What is a data structure
+%https://www.stat.auckland.ac.nz/~paul/ItDT/HTML/node64.html
+
+%Day 1: Chapter 6,7
+%Day 2: Chapter 8--9, R Markdown, Assignment 3 description
+
+%10min: Continue on twitter
+%20 min: data structures
+%30min: lex. variety, hapax richness
+%15min: A3 description

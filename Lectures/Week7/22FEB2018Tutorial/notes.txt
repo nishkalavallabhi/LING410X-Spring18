@@ -1,0 +1,24 @@
+
+
+Function 1: Read a file and get a word vector
+Function 2: Get TTR, given a word vector
+Function 3: Get Avg. Word Freq, given a word vector
+Function 4: get Hapax percent, given a word vector
+Function 5: Given a word vector, word, context, print the context
+
+Exercise 1: Use this information, to create a table of basic stats for each file in the folder
+(show output format)
+
+Exercise 2: Search for a word ad show its context - but ask for one left and one right context
+
+Exercise 3: 
+
+Swirl practice: Revisit swirl tutorial. 
+
+
+file.names <- dir(getwd(), pattern = "\\.txt")
+my_final_vector <- c()
+for (f in file.names) {
+  x <- get_words_vector(f)
+  my_final_vector <- rbind(my_final_vector, get_lex_variety(x))
+}

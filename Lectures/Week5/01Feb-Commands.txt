@@ -1,0 +1,105 @@
+
+v1 = c("This", "is", "an", "example")
+v2 = c("This", "is", "another", "sentence")
+v3 = c("Third", "string", "for", "this", "example")
+temp = list(strsplit(v1, " "),strsplit(v2, " "),strsplit(v3, " "))
+lapply(temp, '[', 2) #gives me all 2nd items within each item in temp.
+
+english <- scan("DollsHouse-Eng.txt", what = "character", sep = "\n")
+english.start <- which (english ==  "DRAMATIS PERSONAE")
+english.end <- which (english == "(The sound of a door shutting is heard from below.)")
+dollshouse_text <- english[english.start:english.end]
+dollshouse_string <- paste(dollshouse_text, collapse = " ")
+dollshouse_string <- tolower(dollshouse_string)
+dollshouse_string <- gsub("[[:punct:]]", " ", dollshouse_string)
+dollshouse_string <- gsub(" +", " ", dollshouse_string)
+dollshouse_words <-strsplit(dollshouse_string, "\\W")
+sorted_wordfreqs_dollshouse <-sort(table(dollshouse_words), decreasing = TRUE)
+
+length(sorted_wordfreqs_dollshouse)
+sum(sorted_wordfreqs_dollshouse)
+sorted_wordfreqs_dollshouse["doll"]
+sorted_wordfreqs_dollshouse["he"]/sorted_wordfreqs_dollshouse["she"]
+sorted_wordfreqs_dollshouse[1:10]
+plot(sorted_wordfreqs_dollshouse[1:10], type="b")
+length(sorted_wordfreqs_dollshouse)
+
+sorted_wordfreqs_dollshouse_100 <- 100 * (sorted_wordfreqs_dollshouse)/ sum(sorted_wordfreqs_dollshouse)
+sorted_wordfreqs_dollshouse["the"]
+sorted_wordfreqs_dollshouse_100["the"]
+
+plot(sorted_wordfreqs_dollshouse_100[1:10], type="b")
+
+dollshouse_words_vector <- unlist(dollshouse_words)
+progress <- seq(1:length(dollshouse_words_vector))
+nora_progression <- rep(NA, length(progress))
+nora_progression[nora] <- 1
+plot(nora_progression, main="Dispersion plot for word 'nora' in 'A Doll\'s House' play", xlab="position in text", ylab="nora", type="h", ylim=c(0,1), yaxt = 'n')
+
+
+moby <- scan("mobydick.txt", what = "character", sep = "\n")
+moby.start <- which (moby ==  "CHAPTER 1. Loomings.")
+moby.end <- which (moby == "orphan.")
+moby.actual <- moby[moby.start:moby.end]
+moby.chap.positions <- grep("^CHAPTER \\d", moby.actual)
+moby.actual[moby.chap.positions]
+
+moby.last.position <- length(moby.actual)
+moby.chap.positions <- c(moby.chap.positions, moby.last.position)
+moby.actual[moby.chap.positions]
+
+chapters.raw <- list()
+for (i in 1:(length(moby.chap.positions) -1))
+{
+  titleline <- moby.chap.positions[i]
+  title <- moby.actual[titleline]
+  start <- titleline+1
+  end   <- moby.chap.positions[i+1]-1
+  chapter.lines <- moby.actual[start:end]
+  chapter.string <- tolower(paste(chapter.lines, collapse = " "))
+  chapter.string <- gsub(" +", " ", gsub("[[:punct:]]", " ", chapter.string))
+  chapter.words <- unlist(strsplit(chapter.string, "\\W"))
+  chapter.freqs <- table(chapter.words)
+  chapters.raw[[title]] <- chapter.freqs
+}
+
+#10 most frequent words in Chapter 1
+sort(chapters.raw[[1]], decreasing = TRUE)[1:10]
+
+#10 most frequent words in Chapter 2
+sort(chapters.raw[[2]], decreasing = TRUE)[1:10]
+
+#Frequency of "whale" in Chapter 1
+chapters.raw[[1]]["whale"]
+
+#Get the frequency of whale from all chapters. 
+whale <- lapply(chapters.raw, "[", "whale")
+
+#Get only the frequencies and plot them. 
+whale_counts = c()
+for (i in 1:length(whale))
+{
+  whale_counts[i] <- whale[[i]]
+}
+whale_counts
+plot(whale_counts, type="h")
+
+voyage <- lapply(chapters.raw, "[", "voyage")
+voyage_counts = c()
+for (i in 1:length(voyage))
+{
+  voyage_counts[i] <- voyage[[i]]
+}
+voyage_counts[is.na(voyage_counts)] <- 0 #Replacing NAs with 0.
+plot(voyage_counts, type="b")
+
+
+
+lista <- list(1,2,3,4)
+vectora <- c(1,2,3,4)
+listb <- list(1,"a",TRUE,4)
+vectorb <- c(1, "a", TRUE, 4)
+list1 <- list(name="Sowmya", courseNum=410, office=331, address="Ross")
+vector1 <- c(name="Sowmya", courseNum=410, office=331, address="Ross")
+
+

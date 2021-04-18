@@ -1,0 +1,215 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+
+\hypersetup{
+    colorlinks,%
+    citecolor=blue,%
+    filecolor=blue,%
+    linkcolor=blue,%
+    urlcolor=blue 
+    %urlcolor=mygreylink     % can put red here to better visualize the links
+}
+
+\author[Sowmya Vajjala]{Instructor: Sowmya Vajjala}
+
+\title[LING 410X]{LING 410X: Language as Data}
+\subtitle{Semester: Spring '18}
+
+\date{16 January 2018}
+
+\institute{Iowa State University, USA}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\begin{frame}\titlepage
+\end{frame}
+
+%Overview of Linguistics and its relevance to discipline specific
+%problems related to text processing%
+%Also talk about Regular expressions. 
+
+
+\begin{frame}
+\frametitle{Class outline}
+\begin{itemize}
+\item Week 1 Quick recap: Swirl lessons
+\item Linguistic Knowledge and Text Processing
+\item Counting words in a text - R example %follow the one from textbook, Chap 2. - 25 min.
+%\item Some simple text processing functions in R: regular expressions %25 min
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\Large Week 1 Review
+\end{frame}
+
+\begin{frame}
+\frametitle{Week 1 review}
+\begin{itemize}
+\item Course overview
+\item R installation and swirl lessons.
+\item Is there anyone who did not start working with R? \pause
+\item How many Swirl lessons did you do? \pause
+\item Any questions or concerns so far on anything from last week's classes? \pause
+\item Did anyone take a look at the Assignment 1 description?
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Few questions about Thursday's lessons}
+\begin{itemize}
+\item What is a vector in R? How are they created? \pause
+\item What does ?c do on R console? \pause
+\item What is "recycling"?
+\item What does a paste() function do with vectors? 
+\end{itemize}
+\end{frame}
+%TODO
+
+\begin{frame}
+\frametitle{Recap of Lesson 2}
+Note: Directory is what we would call a "Folder"
+\begin{itemize}
+\item getwd()
+\item setwd("some folder path")
+\item list.files(), list.files("somefolder") (Quotes are important!)
+\item file.create("somename.txt")
+\item file.exists("somename.txt")
+\item file.info("somename.txt")
+\item file.rename("oldname.txt","newname.txt")
+\end{itemize}
+What is a folder or file path?
+\end{frame}
+
+\begin{frame}
+\frametitle{file/folder "path"}
+\begin{itemize}
+\item What is a path? \pause
+\item How do we find it? \pause
+\item Relative path vs Absolute path \pause
+\item file.path function in R \pause
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Lesson 3: Sequences}
+\begin{verbatim}
+seq(1:20)
+seq(0,10,by=0.5)
+seq(0,10,length=20)
+seq(20:1)
+rep(c(1,2),times=10)
+rep(c(1,2),each=10)
+\end{verbatim}
+Question: What does seq\_along() do?
+\end{frame}
+
+\begin{frame}
+\Large Linguistic Knowledge and Text Processing
+\end{frame}
+
+\begin{frame}
+\frametitle{Text Processing}
+\begin{itemize}
+\item Different tasks require different kinds of language awareness and text preprocessing
+\item Example tasks: getting word collocations, word frequencies, getting POS tags, getting "meaning" of a sentence
+\item Example pre-processing: splitting text into words or sentences, spelling normalization, lower casing, removing punctuation and so on.
+\item In this course, we will primarily discuss text mining at the level of words, without going into deeper linguistic analysis.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\Large Time for some exercises :-) Form into groups of 2-3 people. 
+\end{frame}
+
+\begin{frame}
+\frametitle{Scenario -1}
+If you are asked to get the most frequent 10 words used in "Alice in Wonderland", what are the pre-processing steps you will do and how will you get the list of words and their frequencies?
+\end{frame}
+
+\begin{frame}
+\frametitle{Scenario -2}
+If I give you the text transcripts of all speeches made by all presidential candidates since 2000 and ask you who uses the most number of adjectives, how will you get the answer? What kind of pre-processing should you do and not do? Let us assume there is a way to get the part-of-speech tags for all words in any sentence.
+\end{frame}
+
+\begin{frame}
+\frametitle{Scenario -3}
+If I ask you to find out what are the 10 most frequent words tweeted from Des Moines area in the past 10 days, how will you get the answer? Assume there is a way to get tweets specific to a location and in a given time frame. What are the pre-processing issues you may encounter in this case?
+\end{frame}
+
+\begin{frame}
+\frametitle{Scenario -4}
+Continuing on the twitter problem, will it be easier if I ask you to find out how many people shared a URL in their tweets instead?
+\end{frame}
+
+\begin{frame}
+\frametitle{Scenario -5}
+If I give you a pdf file and ask you to count the number of words in it through R, do you think it is easy or difficult? Why?
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\Large Counting the frequencies of words in a text - R example and discussion
+\small \\ Task: Let us see if we can count the 10 most frequent words in the play "A Doll's House" by Henrik Ibsen
+\end{frame}
+
+\begin{frame}
+\frametitle{What do we need for doing this?}
+\begin{itemize}
+\item Some way to read the file into R (from Project Gutenberg)
+\item Some way to discard all the Gutenberg metadata, and keep only the actual text we need
+\item Lowercase all text (we don't need case info), some way to split it into individual words
+\item Someway to get counts for all unique words in the text
+\item Optional: someway to plot/visualize whatever we extracted.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Procedure and R-functions}
+\begin{itemize}
+\item scan() function - lets you to read a file on your computer into R environment.
+\item which() function - gives you the line number of the string you search for.
+\item tolower() - converts everything into lower case
+\item strsplit() - splits a string into words 
+\item table() - makes a table of words and frequencies
+\item sort() - arranges a table in some order - ascending or descending
+\item plot() - is a function to make simple plots
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{R code for counting word frequencies} 
+\footnotesize
+\begin{verbatim}
+setwd("~/Dropbox/ClassroomSlides-BothCourses/LING410X/")
+english <- scan("DollsHouse-Eng.txt", what = "character", sep = "\n")
+english.start <- which(english == "DRAMATIS PERSONAE")
+english.end <- which(english == 
+      "(The sound of a door shutting is heard from below.)")
+actual_english <- english[english.start:english.end]
+actual_english_string <- paste(actual_english, collapse = " ")
+english_lower <- tolower(actual_english_string)
+english_words <- strsplit(english_lower, "\\W+")
+sorted_freqs_english <- sort(table(english_words), decreasing = TRUE)
+plot(sorted_freqs_english[2:11], type="b")
+\end{verbatim}
+\end{frame}
+
+\begin{frame}
+\frametitle{Next Class}
+\begin{itemize}
+\item Regular Expressions and looking for patterns in strings
+\item Practice exercise about counting frequencies, and looking for patterns
+\item To Do before the class: Read Chapters 1--3 in the textbook. 
+%\item Parsing different file formats (e.g., Webpages, PDF files, Tweets etc)
+\end{itemize}
+\end{frame}
+
+\end{document}
+
+\begin{frame}
+\frametitle{}
+\Large Simple text processing with regular expressions - Overview
+\end{frame}
+

@@ -1,0 +1,185 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\author[Sowmya Vajjala]{Instructor: Sowmya Vajjala}
+
+\title[LING 410X]{LING 410X: Language as Data}
+\subtitle{Semester: Spring '18}
+
+\date{6 March 2018}
+
+\institute{Iowa State University, USA}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\begin{frame}\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Class Outline}
+\begin{itemize}
+\item Quick recap of text classification %10min
+\item Quick recap of what we learnt in R and text analysis so far %20min
+\item Ideas for final projects, expectations etc.%20min
+\item Discussion %10min 
+\item Mid-term feedback%10min
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\centering \Large Text Classification Review
+\end{frame}
+
+\begin{frame}
+\frametitle{Text Classification: Review}
+\begin{itemize}
+\item We saw how to do text classification using bag-of-words features and SVM classification algorithm \pause
+\item We used a movie review corpus and task was sentiment classification \pause
+\item We learnt about using tm. \pause
+\item We saw how to use a "learned" classification model to predict categories for new data.
+\item We also saw how to understand whether our classifier is doing well or not.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Text Classification: How to improve a baseline classification approach}
+\begin{itemize}
+\item Check different pre-processing settings (e.g., do we need stemming? should I remove stopwords? do I need to keep numbers or remove them? is punctuation important for my classification task?) \pause
+\item Look at the number of word features you want to keep. Should you keep every word as a feature or remove some? How to remove? \pause
+\item Is it possible to increase the training data? Is "not having enough data" the main problem? \pause
+\item Should I try other classification algorithms? \pause
+\item Should I go beyond words ("don't like" as a feature is not the same thing as "don't" and "like" being separate words)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Text Classification: more details}
+For a little bit of theoretical background, I would suggest reading the following chapter from a standard Natural Language Processing textbook: \url{https://web.stanford.edu/~jurafsky/slp3/6.pdf}. You will need to know a little bit about probability to understand this.
+\end{frame}
+
+\begin{frame}
+\centering \Large What we learnt about text analysis and R so far
+\end{frame}
+
+\begin{frame}
+\frametitle{What we learnt about text analysis so far}
+\begin{enumerate}
+\item Reading text content into R
+\item Reading a folder of text files into R \pause
+\item Doing some pre-processing (lowercasing, punctuation handling, regular expressions etc)
+\item Splitting one file into parts (e.g., by chapter) \pause
+\item Counting frequencies, creating basic plots
+\item Getting lexical variety measures \pause
+\item creating and evaluating text classification models, given a dataset. 
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{What in R was useful for these?}
+\begin{enumerate}
+\item Reading content: scan function, different libraries (GuardianR, nytimes etc) \pause
+\item Pre-processing: functions like tolower, paste, functions in stringr library, regular expressions, etc. \pause
+\item Splitting a file into parts: which() function 
+\item Organizing data in different ways: vectors, lists, data frames, matrices \pause
+\item Counting frequencies: sort, table
+\item Creating basic plots: plot \pause
+\item lexical variety: sum, length functions
+\item others: using rbind, cbind, sapply, lapply etc
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{Other useful things}
+\begin{enumerate}
+\item writing our own R functions
+\item writing a for loop
+\item R markdown
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{So many of them - how to keep track?}
+\begin{itemize}
+\item Attend classes regularly. Maintain notes.
+\item Spend some time with lecture slides/tutorials; Have a DIY attitude
+\item Use R outside classroom, and not only for doing assignments
+\item Be organized - have a folder structure in your computer. Keep all code in one place.
+\item Participate in the class, discuss in the forums, meet during office hours.
+\end{itemize}
+\pause "Education is the only business where customers pay more and expect less" - one day, I hope that will be proven wrong!
+\end{frame}
+
+\begin{frame}
+\centering
+\Large Final Projects - Discussion
+\end{frame}
+
+\begin{frame}
+\frametitle{Final Projects for the course: Expectations}
+\begin{itemize}
+\item grade weightage: 25\%
+\item Individual or group projects (Group projects are preferred, with group size being 2 or 3 max).
+\item Aim: choose some text dataset, explore a micro/meso/macro text analysis problem, and use some visualizations to summarize information from text.
+\item initial report (explaining what dataset you will use, what you will do with it, how you plan to do it): Due on 7th April - 5\%
+\item presentation in the class in the last week of classes - 5\%
+\item submission of your report about the project (with visuals, relevant R code etc) in exams week - 15\%
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Some ideas for project tasks}
+My final projects example descriptions document on Canvas.
+\end{frame}
+
+\begin{frame}
+\frametitle{Some Datasets}
+\begin{itemize}
+\item Some data repositories for classification problems - look for text data in these
+\begin{itemize}
+\item \url{https://goo.gl/UUkNZ1}
+\item \url{https://goo.gl/3nKyAQ}
+\end{itemize}
+\item For topic modeling:
+\begin{itemize}
+\item Topic modeling datasets for humanities: \url{https://de.dariah.eu/tatom/datasets.html}
+\item Clinton-Trump tweets dataset: \url{https://www.kaggle.com/benhamner/clinton-trump-tweets}
+\item Congressional speech data: \url{http://www.cs.cornell.edu/home/llee/data/convote.html}
+\item Presidential speeches transcripts from Miller Center \url{https://millercenter.org/the-presidency/presidential-speeches}. A project that is related to this: \url{https://github.com/BBischof/speaksLike}
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Rest of this class}
+\begin{itemize}
+\item Think about some ideas for this course project (Take a look at Canvas document!)
+\item Talk to others, see if you want to form groups (strongly encouraged)
+\item try to connect what you learn about in your own disciplines to this course and formulate some project ideas that will be relevant for you in future (in course work, in job applications in future etc).
+\item Present your ideas in class on Thursday (Don't miss the class!). 
+\item You don't need to prepare slides (you can, if you want). The idea is to discuss some ideas, and get some feedback from others.
+\item Keep in mind: there is only a limited amount of time. Don't think about impossible ideas.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Mid-term Feedback}
+\begin{itemize}
+\item Please fill up the mid-term feedback.
+\item It is primarily for me to get some feedback, as there is still enough time to get better.
+\item It is also for you to think about how you are doing, and how you can improve.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Next class}
+\begin{itemize}
+\item Discussion about your project ideas
+\item Today's attendance question: Try to look around, and, explain what a do.call() function does in R, with an example. 
+\item There will be time alloted to do Assignment 4 in the class.
+\end{itemize}
+\end{frame}
+
+\end{document}
+
+

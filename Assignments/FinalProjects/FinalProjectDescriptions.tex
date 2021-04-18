@@ -1,0 +1,45 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{hyperref}
+
+\begin{document}
+\begin{center}
+  Spring 2018 \\ Iowa State University\\[3ex]
+  {\large \textbf{LING 410X-Language as Data}}\\[3ex]
+  \textbf{Final Project Example Ideas} 
+\end{center}
+
+\paragraph{Submission Deadlines: (Total: 25\% of your grade)}
+   \begin{enumerate}
+   \item Forming groups + writing initial report: 7 April 2018 (5\%)
+   \item Classroom Presentations: April 24, 26 (5\%)
+   \item Code and report submission: May 3 (15\%)
+\\ (report up to 5 pages long, no double spacing)
+   \end{enumerate}
+
+\paragraph{Instructions:} Here are some final projects you can consider working on in groups of 2 people. You are encouraged to come up with alternate ideas if you want, but I should approve them before you start on them. The project carries 25\% of your grade. I expect to see three deliverables related to this project and the deadlines are mentioned above. Your project will be evaluated holistically -i.e., beating existing solutions is not the sole criteria to get a good grade. So, do not panic if your well-executed new idea turns out in the end to be not good as you thought it will be. If you already have a domain specific dataset and some problem to be solved in mind, please start expanding on those ideas! I split the ideas into four categories: corpus analysis, text classification, topic modeling, and visualization
+
+\section*{Idea 1: Twitter analytics}
+\textbf{keywords: } visualization, corpus analysis, topic modeling
+\\ \textbf{Description:} Analyze and visualize the trends in twitter for a topic of your choice based on geographic location and keywords, and create visualizations that you think are relevant to talk about your dataset. There are several other interesting things you can mine from twitter. Read a bit and figure out what you want to work on otherwise. 
+
+\section*{Idea 2: Topic modeling with newspapers or research articles or blogs (or any such data you can find)} 
+\textbf{keywords:} topic modeling, corpus analysis
+\\ \textbf{Description:} Pick a newspaper of your choice (nytimes, guardian are good choices, as we discussed about them), analyze somewhere between 200-500 articles from recent past (figure out how to get these!) and create topic models and their visualizations.  Alternatively, you can also pick research articles from your discipline over a certain span of time or Literary pieces from Gutenberg etc. 
+
+\section*{Idea 3: Sentiment classification on movie reviews}
+\textbf{Keywords:} text classification
+\\ \textbf{Description: } Have a look at this website and the data it provides: \url{https://www.kaggle.com/c/sentiment-analysis-on-movie-reviews/data} Your task is to use the dataset and develop a text classification approach to classify movie reviews into positive (scores 3,4 in the data), neutral (2) and negative (0,1). You should explore multiple approaches, evaluate and compare them and present your findings. Visualizations are not mandatory, but recommended. This is not the only text classification dataset out there. You can come up with anything relevant to your area of research (or talk to me to figure out) and work on text classification and then visualizing the models. 
+
+\section*{Idea 4: Stylistic analysis}
+\textbf{Keywords: } corpus analysis, visualization
+\\ \textbf{Description:} Take any two favorite authors of yours whose works are accessible online. Compare their writings in terms of their writing style, and take a third author who you believe has a similar writing style to one of these authors and analyze the similarity. You can make use of Stylo R library as a starting point, use different visualizations it supports, along with ngram analysis. 
+
+\section*{Other ideas}
+You can take the basic question as one of: text classification, clustering, topic modeling; and work on corpus analyses and visualizations for any textual dataset you have access to. 
+
+\end{document} 
+
+
+\section*{Idea 5: NLP for Clinical Psychology}
+\textbf{Keywords:} text classification, social media analytics, clinical psychology
+\\ \textbf{Description:} Reachout.com is a mental health website for youth. It has a forum website where young people can share thoughts and support each other anonymously. Trained teams of moderators exist in these forums who can escalate certain posts (which need serious attention). In 2016, Computational Linguistics for Clinical Psychology (CLPsych) group organized a shared task with reachout.com forums data. The goal of this task is to automatically tag forum posts into one of the three categories red/amber/green depending on how urgently the post needs attention. The idea is to be able to support the moderators with automatic classification of forum posts. More details on this task can be seen at: \url{http://clpsych.org/shared-task-2016/}. Results of last year's task, describing the approaches, system performance etc can be seen at: \url{http://www.aclweb.org/anthology/W/W16/#0300}. Dataset used for this task is available through me. Your task is to read the approaches of other people, come up with your way of solving this problem, develop and evaluate your text classification approach. You can use any machine learning toolkits and APIs you want, in any programming language. 

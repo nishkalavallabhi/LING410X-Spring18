@@ -1,0 +1,56 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{url}
+
+\begin{document}
+\begin{center}
+  Spring Semester 2018 \\ Iowa State University\\[3ex]
+  {\large LING 410X - Language as Data}\\[3ex]
+  \textbf{Assignment 2 - Working with different data formats} \\ \textbf{Submission Deadline: 10 Feb 2018, end of the day}
+\end{center}
+
+
+\paragraph{Instructions:} This assignment consists of two questions. Each question carries 5 marks. Upload your submission as a zip file in your\_Lastname\_A2.zip format. Late submissions are allowed, but will not be awarded full credit.
+
+\section*{Question 1} 
+Go to the following link: \url{http://www.gutenberg.org/ebooks/2446} where the same book exists in different formats. Your task is to read the HTML document and the plain-text (.txt) file onto your Desktop and read the files in R using readLines() function. Compare the numbers you got in both steps. If they are different, try to guess why they are different looking at the text of both versions. Which one of these formats is easy to process for R in your opinion? Why? Write this up in a 1-2page document and submit as pdf. 
+
+Optional challenge: You can also try to figure out and use XML library in R to parse HTML files. If you decide to go the XML library route, this will require you to install the package "XML", which can parse HTML. You should read its documentation to figure out how to work this!
+
+%doc.html = htmlTreeParse('http://www.gutenberg.org/files/2446/2446-h/2446-h.htm', useInternal = TRUE)
+%doc.text = unlist(xpathApply(doc.html, '//body/text()', xmlValue))
+
+%txtVersion = readLines("pg2446.txt")
+%sum(nchar(txtVersion))
+%answers: 189963 for .txt, 206688 for html.
+
+\section*{Question 2}
+"GuardianR" is a R package provide us with functionalities to search and access news articles from "The Guardian" newspaper. Your task in this question is to setup this package to work, learn to work with it (seeing the GuardianR manual : \url{https://cran.r-project.org/web/packages/GuardianR/GuardianR.pdf}) and do the following: 
+\begin{enumerate}
+\item Search for articles about Justin Trudeau between 1st-15 January 2018 and on 1st-15th January 2014 (Do not worry about the actual content of what you get. My purpose is to make you search for a string with two words - in this case - Justin Trudeau).
+\item How many results did you get for 2018, and how many did you get for 2014?
+\item Prepare a spreadsheet with 2014 results and 2016 results (2 columns for each year - id and wordcount.)
+\item Submit this spreadsheet as a part of your assignment. 
+\end{enumerate}
+Here are a few r-functions that will be useful in this process:
+\begin{itemize} 
+\item if results is a dataframe:
+\begin{enumerate}
+\item names(results) gives you the column names of the data-frame results.
+\item nrow(results) gives you the number of rows in results
+\item ncol(results) gives you the number of columns in results
+\item results["id"] prints you all text in column "id" in results
+\end{enumerate}
+\end{itemize}
+Note: There were several R libraries for several content rich websites such as : Wikipedia, Gutenberg, NYTimes, Twitter. However, all of them need not necessarily form the exact same structure of output as this. The best approach is to check the documentation for that package, and follow a trial and error process to understand the format. 
+\end{document}
+
+
+%results <- get_guardian("united+states", section="world", from.date="2014-09-16", to.date="2014-09-16", api.key="8b40468e-139b-4d90-94ac-1f74d22fd291")
+
+%A2 assigned. A1 due. A2 on corpus cleaning etc. include tweet scraping etc
+%1 question on HTML scraping from Gutenberg and comparing it with reading plain text - in terms of num. words num. chars. 
+%then, ask to tokenize the plain-text, lowercase all words, count the occurrence of a bunch of words in this text. the, in, for etc. 
+
+%NOT FOR NOW: Do a little bit of research on parsing a pdf file in R, and parse any pdf file of your choice using the method, and write down your observations. 
+
+

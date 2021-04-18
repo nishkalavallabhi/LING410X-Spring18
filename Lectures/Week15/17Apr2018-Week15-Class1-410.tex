@@ -1,0 +1,259 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\author[Sowmya Vajjala]{Instructor: Sowmya Vajjala}
+
+\title[LING 410]{LING 410: Language as Data}
+\subtitle{Semester: Spring '18}
+
+\date{17 Apr 2018}
+
+\institute{Iowa State University, USA}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\begin{frame}\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Class Outline}
+\begin{itemize}
+\item Few quick announcements
+\item Assignment 6 discussion
+\item General revision/discussion (in the form of lot of questions)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Course Evaluations}
+\begin{itemize}
+\item Course evaluations messages must have come- please complete the evaluations.
+\item I will give time in one of the lab sessions remaining, if needed.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Next Class}
+\begin{itemize}
+\item Time for preparing for your project presentations.
+\item I will leave very early (around 10 am) as I have to attend a LAS event
+\item But I strongly recommend you to work on your projects in this time.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\Large Project Presentations - Schedule and Guidelines
+\end{frame}
+
+\begin{frame}
+\frametitle{Project presentations schedule-1}
+24th April
+\begin{itemize}
+\item Carlos Eduardo Back Vianna
+\item Su-Yeon Cho
+\item Brody Dingel and John Piegors
+\item Helena Hansen 
+\item Gage Williams
+\end{itemize}
+(max 15 min each, including questions)
+\end{frame}
+
+\begin{frame}
+\frametitle{Project presentations schedule-2}
+26th April
+\begin{itemize}
+\item Lauren Didesch 
+\item Kori Ralston
+\item Xiaochi Jin and Nicole Richwine
+\end{itemize}
+(max 15 min each, including questions)
+\end{frame}
+
+\begin{frame}
+\frametitle{Presentation Guidelines}
+\begin{itemize}
+\item grade: 5\%
+\item Each team gets 10 (+/- 2 minutes) to present, and 2-3 more minutes for questions and discussion. 
+\item Stick to the time, and practice accordingly.
+\item You can use your laptop or send the presentations to me before the class. 
+\item All presentations need to be uploaded on Canvas in FinalProject-Presentation by the end of the class on 26th. 
+\item You have time up to 3rd May midnight to upload your final submission (report + R code). I cannot accept late submissions. 
+\item More on format for final report next week.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Presentation Guidelines-2}
+\begin{itemize}
+\item Introduce yourselves, introduce your project, talk about your data, your methods, your results, and conclusions so far.
+\item Mention what i­s left for final submission, and how what you did can be improved upon. 
+\item Be professional, take questions in a good spirit.
+\item If you have no problems with privacy etc, you can share your presentations in the discussion forum too. 
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{}
+\Large Assignment 6 discussion
+\end{frame}
+
+\begin{frame}
+\frametitle{Assignment 6 - process discussion}
+\begin{itemize}
+\item Starting point: use tm to build a term-document matrix (rows are words, columns are texts)
+\item i.e., use VCorpus or Corpus(VectorSource(.....)) or Corpus(DirSource(...)) or any other tm functions, to read in a folder of .txt files (2 files in our case)
+\item use tm\_map() function to do some pre-processing
+\item Use the post-pre-processed version to build the term-doc. matrix
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Assignment 6 - process discussion}
+To build wordclouds for each text
+\begin{itemize}
+\item You should re-order the matrix such that more frequent words come on top.
+\item use the wordcloud function on this above matrix
+\end{itemize} \pause
+
+To build commonality cloud, you use the whole tdm instead of only one column each time. It shows only those words that appear in both documents, and the size of the word represents combined frequency. 
+\end{frame}
+
+\begin{frame}
+\frametitle{Assignment 6 - process discussion}
+Comparison cloud
+\begin{itemize}
+\item aim: to compare relative occurrence of words in two or more documents (yes, we can do with multiple documents). 
+\item If a word appears more frequently in one document, than the other, it is seen in that side of the cloud. 
+\end{itemize}
+\footnotesize
+\url{https://www.rdocumentation.org/packages/wordcloud/versions/2.5/topics/comparison.cloud}
+\end{frame}
+
+\begin{frame}
+\frametitle{analyzing SOTU speeches with wordcloud}
+Some online blog posts: \small
+\begin{itemize}
+\item \url{http://blog.fellstat.com/?p=101}
+\item \url{https://rpubs.com/brandonkopp/creating-word-clouds-in-r}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{When to go for which method}
+\begin{itemize}
+\item Small number of documents, and you have a general idea about them (1-5): \pause wordclouds are perhaps sufficient.
+\item Lot of documents, and you have little idea about what each of them are about: \pause topic models
+\item Small number or lot of documents, you are looking to put them into groups based on some characteristics: \pause clustering
+\item small number or lot of documents, you know each has to be in one of the given categories, you should predict that category: \pause classification
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+In the following slides, I will describe some problem scenario involving textual data, and you should discuss with your neighbor or other classmate (don't work individually!!) and share your ideas after some time. 
+
+\bigskip\bigskip For several of these, there is no concrete, single answer. The goal of this exercise is to make you think about new scenarios, give you some practice with approaching a problem without much guidance. 
+\end{frame}
+
+%come up with more such examples. 
+\begin{frame}
+\frametitle{Take this scenario: authorship question}
+\begin{itemize}
+\item Federalist papers are a collection of 85 essays written under a pseudonym "Publius" by Alexander Hamilton, James Madison, and John Jay
+\item Authorship of 73 of them is fairly certain. 
+\item For the other 12, scholars debate about authorship. 
+\item If someone comes to you and asks you to suggest a solution for knowing the authorship, what will you suggest?
+\end{itemize}
+(Discuss with your neighbor. We can pool responses after 5minutes)
+\end{frame}
+
+\begin{frame}
+\frametitle{Take this scenario: vocabulary richness}
+\begin{itemize}
+\item I want to know whether English language learners use a richer vocabulary as they get better in terms of language proficiency.
+\item How can I answer this question - what do I need, how do I proceed, based on what you learnt in this class so far?
+\end{itemize}
+(Discuss with your neighbor. We can pool responses after 5minutes)
+\end{frame}
+
+\begin{frame}
+\frametitle{Take this scenario: analyzing word usage}
+\begin{itemize}
+\item Let us say I have this scenario where I want to study:
+\begin{itemize}
+\item What are the different ways in which people use the word "apple" in newspapers
+\item How are English swear words used in different English speaking countries
+\end{itemize}
+- how can what you learnt in this class help you solve these two questions? 
+\end{itemize}
+(Discuss with your neighbor. We can pool responses after 5minutes)
+\end{frame}
+
+\begin{frame}
+\frametitle{Take this scenario: authorship question, again}
+\begin{itemize}
+\item Let us say I have 500 articles written by a columnist A, 500 articles written by columnist B, and 500 by columnist C in a newspaper (say NYT). 
+\item Someone gave me 100 anonymous articles, and we are 100\% sure the author is either A or B or C. 
+\item If someone comes to you and asks you to suggest a solution for knowing the authorship, what will you suggest?
+\end{itemize}
+(Discuss with your neighbor. We can pool responses after 5minutes)
+\end{frame}
+
+\begin{frame}
+\frametitle{Take this scenario: politics and media}
+\begin{itemize}
+\item How will you approach the question: what are the main issues of interest for democrats vs republicans?
+\end{itemize}
+(Discuss with your neighbor. We can pool responses after 5minutes)
+\end{frame}
+
+\begin{frame}
+\frametitle{Take this scenario:pre-processing}
+\begin{itemize}
+\item Can you think of some scenarios, where we don't have to (or perhaps should not) remove punctuation, do lowercasing, remove stopwords etc?
+\end{itemize}
+(Discuss with your neighbor. We can pool responses after 5minutes)
+\end{frame}
+
+\begin{frame}
+\frametitle{Take this scenario: pre-processing}
+If you compare a collection of news articles vs tweets
+\begin{itemize}
+\item How is pre-processing different?
+\item Are there issues that needs to be handled in one, but not the other kind of data?
+\item What issues exist if we want to do, say, classification of a news article into one of the possible 4 groups vs classifying a tweet into one of the 4 possible groups?
+\end{itemize}
+(Discuss with your neighbor. We can pool responses after 5minutes)
+\end{frame}
+
+%2 more like this.
+
+\begin{frame}
+\frametitle{Challenges}
+\begin{itemize}
+\item In all these scenarios, what are some primary challenges?
+\end{itemize}
+(Discuss with your neighbor. We can pool responses after 5minutes)
+\end{frame}
+
+\begin{frame}
+\frametitle{Steps}
+\begin{itemize}
+\item Can you think of some common steps involved in working with such questions?
+\end{itemize}
+(Discuss with your neighbor. We can pool responses after 5minutes)
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Next Class}
+\begin{itemize}
+\item Time for preparing for your project presentations.
+\item I will leave early as I have to attend a LAS event -you can continue working in the lab.
+\end{itemize}
+\end{frame}
+
+\end{document}

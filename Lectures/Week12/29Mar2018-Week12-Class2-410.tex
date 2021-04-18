@@ -1,0 +1,80 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\author[Sowmya Vajjala]{Instructor: Sowmya Vajjala}
+
+\title[LING 410X]{LING 410X: Language as Data}
+\subtitle{Semester: Spring '18}
+
+\date{29 March 2018}
+
+\institute{Iowa State University, USA}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\begin{frame}\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Topic modeling -resources page}
+\url{https://github.com/trinker/topicmodels_learning}
+\end{frame}
+
+\begin{frame}
+\frametitle{"Learning" a topic model with mallet: steps in the code}
+\begin{enumerate}
+\item Pre-processing of the corpus (in author's version: splitting it into chunks, pre-processing of chunks)
+\item Getting it into a two column format (id, text).
+\item Using mallet package in R to build a topic model.
+\item use mallet.import() function to convert a dataset into mallet format
+\item use MalletLDA() function to create a topic model, setting its parameters. 
+\item observe and analyze the output in different ways. 
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{Tuesday's class}
+\begin{itemize}
+\item I followed this step by step, with movie reviews corpus (without considering positive/negative sentiment information)
+\item Code for that is: anothertopicmodelexample.R on Canvas.
+\item We also discussed about how a topic model learns (conceptually), and how are they typically evaluated.
+\item Today: it is more about building your own topic models.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Exercise}
+\begin{itemize}
+\item open mallet-29marlab.R - you have some lines of code, along with comments and questions.
+\item Walk through that step by step (dataset is provided) and answer the questions I posed there.
+\item About the corpus: common core standards exemplar texts - from US school textbooks/reading materials. 
+\item Different topics, different genres - literature, informational texts, speeches etc. 
+\item You may recognize some titles.
+\end{itemize}
+
+Post your observations from the exercise, addressing my questions in the comments inside R code. Post in the forum with today's date. 
+\end{frame}
+
+\begin{frame}
+\frametitle{Exercise: Alternate option}
+\begin{itemize}
+\item Topic modeling with News articles.
+\item Get news articles on "USA" from Guardian for two time periods. Build one topic model per time period based on article content.
+\item Compare the topics discussed about USA between different time periods.
+\item Same questions as before remain about pre-processing, choosing number of topics etc. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{General Remarks for next week}
+\begin{itemize}
+\item We completed all except two chapters from the textbook (chapter 5, chapter 11).
+\item Next week: text visualization (covers ideas in Chapter 11) - read this chapter. 
+\item Reminder: Submit Assignment 5 
+\item Regarding Assignment 6: You can either use mallet library or use topicmodels library as described in the tutorial. 
+\item Start thinking about your final projects now - conceptually, everything is pretty much done.
+\end{itemize}
+\end{frame}
+
+\end{document}
